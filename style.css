@@ -7,3 +7,13 @@
     height: 100%; 
     z-index: 1000
 }
+
+.metro-notes-note {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    resize: both;
+    background: gray;
+    color: white;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+}
