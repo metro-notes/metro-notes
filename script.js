@@ -21,6 +21,7 @@ var overlayObject = $(overlaySelector);
 overlayObject.hide();
 var url = document.URL;
 var notes = new Array();
+var insideElement = false;
 
 if(url.length) {
     var arr = localStorage.getItem(url);
@@ -33,15 +34,22 @@ if(url.length) {
 }
 
 overlayObject.on('click', function (e) {
+    if(insideElement){
+        insideElement = false;
+        return false;
+    }
     console.log(e);
     var note = $('<div class="metro-notes-note" contentEditable="true"></div>');
     note.css('top', e.offsetY);
     note.css('left', e.offsetX);
     overlayObject.append(note);
+    note.focus();
+    insideElement = true;
 });
 
 overlayObject.on('click', '.metro-notes-note', function () {
     $(this).attr('contentEditable', 'true');
+    insideElement = true;
     return false;
 });
 
