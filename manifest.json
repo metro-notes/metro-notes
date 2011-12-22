@@ -1,0 +1,19 @@
+{
+    "name": "Metro Notes",
+    "version": "1",
+    "description": "A sticky notes application that lives above your websites. Inspired by the Windows Metro UI",
+    "background_page": "background.html",
+    "browser_action": {
+        "name": "Show notes"
+    },
+    "permissions": [
+        "tabs", "http://*/*", "https://*/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "css": ["style.css"],
+            "js": ["jquery.js", "script.js"]
+        }
+    ]
+}
