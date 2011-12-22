@@ -2,12 +2,16 @@ var displayOverlay = function() {
     overlayObject.slideToggle('fast');
 }
 
-var insertNote = function(note) {
-    overlayObject.append('<div class="metro-notes-note"><p>note</p></div>');
+var insertNote = function(noteObj) {
+    var note = $('<div class="metro-notes-note"></div>');
+    note.append('<p>' + noteObj.note + '</p>');
+    note.css('top', noteObj.top);
+    note.css('left', noteObj.left);
+    overlayObject.append(note);
 }
 
-var createNote = function(note) {
-    notes.push(note);
+var createNote = function(note, top, left) {
+    notes.push({'note': note, 'top': top, 'left': left});
     localStorage.setItem(url, JSON.stringify(notes));
 }
 
@@ -46,7 +50,7 @@ overlayObject.on('blur', '.metro-notes-note', function () {
     if($.trim(note) == '') {
         $(this).remove();
     } else {
-        createNote(note);
+        createNote(note, $(this).css('top'), $(this).css('left'));
         $(this).attr('contentEditable', 'false');
     }
     return false;
