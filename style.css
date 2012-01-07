@@ -10,12 +10,13 @@
 
 .metro-notes-note {
     position: absolute;
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
     padding: 10px;
     font-size: 14px;
     border: 2px solid;
     border-color: rgb(238, 232, 213);
+    overflow: auto;
     resize: both;
     background: rgb(256, 246, 227);
     color: rbg(44, 44, 44);
