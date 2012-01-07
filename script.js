@@ -3,7 +3,7 @@ var displayOverlay = function() {
 }
 
 var insertNote = function(noteObj, index) {
-    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"></div>');
+    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '" draggable="true" ></div>');
     note.append(noteObj.note);
     note.css('top', noteObj.top);
     note.css('left', noteObj.left);
@@ -42,7 +42,7 @@ overlayObject.on('click', function (e) {
         return false;
     }
     console.log(e);
-    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + notes.length + '" contentEditable="true"></div>');
+    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + notes.length + '" draggable="true" contentEditable="true"></div>');
     note.css('top', e.offsetY);
     note.css('left', e.offsetX);
     overlayObject.append(note);
