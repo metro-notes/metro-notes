@@ -22,6 +22,7 @@ $('body').append('<div id="metro-notes-overlay"></div>');
 var overlayObject = $(overlaySelector);
 overlayObject.hide();
 var url = document.URL;
+var lastzindex = 1;
 var notes = new Array();
 var insideElement = false;
 
@@ -53,6 +54,10 @@ overlayObject.on('click', '.metro-notes-note', function () {
     $(this).attr('contentEditable', 'true');
     insideElement = true;
     return false;
+});
+
+overlayObject.on('mouseover', '.metro-notes-note', function () {
+    $(this).css('zIndex', lastzindex++);
 });
 
 overlayObject.on('blur', '.metro-notes-note', function () {

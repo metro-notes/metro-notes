@@ -14,6 +14,8 @@
     height: 250px;
     padding: 10px;
     font-size: 14px;
+    border: 2px solid;
+    border-color: rgb(238, 232, 213);
     resize: both;
     background: rgb(256, 246, 227);
     color: rbg(44, 44, 44);
