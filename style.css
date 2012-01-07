@@ -1,5 +1,5 @@
 #metro-notes-overlay {
-    background: rgba(255, 255, 255, 0.6); 
+    background: rgba(255, 255, 255, 0.7); 
     position: absolute; 
     top: 0px; 
     left: 0px;
@@ -12,8 +12,13 @@
     position: absolute;
     width: 250px;
     height: 250px;
+    padding: 10px;
+    font-size: 14px;
     resize: both;
-    background: gray;
-    color: white;
-    font-family: 'Segoe UI', 'Arial', sans-serif;
+    background: rgb(256, 246, 227);
+    color: rbg(44, 44, 44);
+    font-family: 'Helvetica', 'Segoe UI', 'Arial', sans-serif;
+}
+.metro-notes-note > p {
+    margin: 0px;
 }
