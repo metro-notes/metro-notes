@@ -5,22 +5,55 @@ var displayOverlay = function() {
 var insertNote = function(noteObj, index) {
     var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"></div>');
     note.append(noteObj.note);
-    note.css('top', noteObj.top);
-    note.css('left', noteObj.left);
-    note.drag(function( ev, dd ){
-        $( this ).css({
+    note.css({
+        'top': noteObj.top,
+        'left': noteObj.left,
+        'width': noteObj.width,
+        'height': noteObj.height
+    });
+    note.drag(function(ev, dd){
+        $(this).css({
             top: dd.offsetY,
             left: dd.offsetX
         });
     });
+    note.on('dragend', function() {
+        var tar = $(this);
+        noteObj = {
+            'note': tar.text(),
+            'top': tar.css('top'),
+            'left': tar.css('left'),
+            'width': tar.css('width'),
+            'height': tar.css('height')
+        };
+        updateNote(index, noteObj);
+    });
+
     overlayObject.append(note);
+    return note;
 }
 
-var createNote = function(note, id, top, left) {
-    if(parseInt(id.replace('metro-notes-note-', '')) >= notes.length) {
-        notes.push({'note': note, 'top': top, 'left': left});
-        localStorage.setItem(url, JSON.stringify(notes));
-    }
+var createNote = function(noteObj) {
+    insertNote(noteObj, notes.length);
+    notes.push(noteObj);
+    localStorage.setItem(url, JSON.stringify(notes));
+}
+
+var updateNote = function(index, noteObj) {
+    $('#metro-notes-' + index).text(noteObj.note).css({
+        'top': noteObj.top,
+        'left': noteObj.left,
+        'width': noteObj.width,
+        'height': noteObj.height
+    });
+    notes[index] = noteObj;
+    localStorage.setItem(url, JSON.stringify(notes));
+}
+
+var deleteNote = function(index) {
+    $('#metro-notes-' + index).remove();
+    notes[index] = '';
+    localStorage.setItem(url, JSON.stringify(notes));
 }
 
 var overlaySelector = '#metro-notes-overlay';
@@ -37,7 +70,9 @@ if(url.length) {
     if(arr != null) {
         notes = JSON.parse(arr);
         for (var i in notes) {
-            insertNote(notes[i], i);
+            if(notes[i] !== '') {
+                insertNote(notes[i], i);
+            }
         }
     }
 }
@@ -47,24 +82,15 @@ overlayObject.on('click', function (e) {
         insideElement = false;
         return false;
     }
-    console.log(e);
-    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + notes.length + '" contentEditable="true"></div>');
-    note.css('top', e.offsetY);
-    note.css('left', e.offsetX);
-    note.drag(function( ev, dd ){
-        $( this ).css({
-            top: dd.offsetY,
-            left: dd.offsetX
-        });
-        $(this).css();
-    });
-    overlayObject.append(note);
-    note.focus();
+    noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
+    insertNote(noteObj, notes.length).prop('contentEditable', true).focus();
     insideElement = true;
 });
 
 overlayObject.on('click', '.metro-notes-note', function () {
-    $(this).attr('contentEditable', 'true');
+    console.log('here');
+    console.log($(this).attr('contentEditable'));
+    $(this).attr('contentEditable', 'true').focus();
     insideElement = true;
     return false;
 });
@@ -76,9 +102,17 @@ overlayObject.on('mouseover', '.metro-notes-note', function () {
 overlayObject.on('blur', '.metro-notes-note', function () {
     var note = $(this).text();
     if($.trim(note) == '') {
-        $(this).remove();
+        deleteNote($(this).attr('id').replace('metro-notes-note-', ''));
     } else {
-        createNote(note, $(this).attr('id'), $(this).css('top'), $(this).css('left'));
+        var tar = $(this);
+        noteObj = {
+            'note': tar.text(),
+            'top': tar.css('top'),
+            'left': tar.css('top'),
+            'width': tar.css('width'),
+            'height': tar.css('height')
+        };
+        updateNote($(this).attr('id').replace('metro-notes-note-', ''), noteObj);
         $(this).attr('contentEditable', 'false');
     }
     return false;

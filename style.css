@@ -22,6 +22,9 @@
     color: rbg(44, 44, 44);
     font-family: 'Helvetica', 'Segoe UI', 'Arial', sans-serif;
 }
+.metro-notes-note:focus {
+    outline: none;
+}
 .metro-notes-note > p {
     margin: 0px;
 }
