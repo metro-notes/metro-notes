@@ -13,7 +13,7 @@
         {
             "matches": ["http://*/*", "https://*/*"],
             "css": ["style.css"],
-            "js": ["jquery.js", "script.js"],
+            "js": ["jquery.js", "jquery.event.drag-2.0.min.js", "script.js"],
             "run-at": "document_end" 
         }
     ]
