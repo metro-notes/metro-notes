@@ -18,10 +18,9 @@ var insertNote = function(noteObj, index) {
         'width': noteObj.width,
         'height': noteObj.height
     });
-    
+  /*  
     note.on('drag', drag);
     note.children('p').on('drag', function() {});
-
     note.on('dragend', function() {
         var tar = $(this);
         noteObj = {
@@ -34,6 +33,7 @@ var insertNote = function(noteObj, index) {
         updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
     });
 
+*/
     overlayObject.append(note);
     return note;
 }
@@ -82,7 +82,6 @@ if(url.length) {
         }
     }
 }
-
 overlayObject.on('click', function (e) {
     if(insertMode){
         insertMode = false;
@@ -92,8 +91,7 @@ overlayObject.on('click', function (e) {
     insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
     insertMode = false;
 });
-
-overlayObject.on('click', '.metro-notes-note > p', function () {
+$('.metro-notes-note > p').on('click', function () {
    if ($(this).attr('contentEditable') != true) {
         $(this).attr('contentEditable', 'true').focus();
     }
@@ -101,7 +99,6 @@ overlayObject.on('click', '.metro-notes-note > p', function () {
     console.log('clicking on p');
     return false;
 });
-
 overlayObject.on('click', '.metro-notes-note', function () {
     $('.metro-notes-note').children('p').attr('contentEditable', 'false');
     insertMode = false;
