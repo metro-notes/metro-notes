@@ -17,13 +17,14 @@
     border: 2px solid;
     border-color: rgb(238, 232, 213);
     overflow: auto;
+    word-wrap: break-word;
     resize: both;
     background: rgb(256, 246, 227);
     color: rbg(44, 44, 44);
     font-family: 'Helvetica', 'Segoe UI', 'Arial', sans-serif;
 }
-.metro-notes-note:focus {
-    outline: none;
+.metro-notes-note > p:focus {
+    outline: rgb(147, 161, 161);
 }
 .metro-notes-note > p {
     margin: 0px;
