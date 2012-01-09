@@ -16,7 +16,6 @@ var dragend = function() {
 };
 
 var drag = function(ev, dd){
-    if($(this).children('p').attr('contentEditable')) return;
     $(this).css({
         top: dd.offsetY,
         left: dd.offsetX
@@ -24,7 +23,7 @@ var drag = function(ev, dd){
 };
 
 var insertNote = function(noteObj, index) {
-    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><p></p></div>');
+    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><div class="handle"></div><p></p></div>');
     note.children('p').append(noteObj.note);
     note.css({
         'top': noteObj.top,
@@ -33,9 +32,9 @@ var insertNote = function(noteObj, index) {
         'height': noteObj.height
     });
     
-    note.on('drag', drag);
-    note.children('p').on('drag', function() {});
-
+    note.drag(drag, {
+        'handle': '.handle'
+    });
     note.on('dragend', dragend);
 
     overlayObject.append(note);
@@ -44,18 +43,10 @@ var insertNote = function(noteObj, index) {
 
 var disableInsertMode = function() {
     insertMode = false;
-    /*
-     * overlayObject.off('drag', 'metro-notes-note');
-    overlayObject.off('dragend', 'metro-notes-note');
-    overlayObject.on('drag', 'metro-notes-note', drag);
-    overlayObject.on('dragend', 'metro-notes-note', dragend);
-*/
 }
 
 var enableInsertMode = function(target) {
     insertMode = true;
-//    target.off('drag');
- //   target.off('dragend');
 }
 
 var createNote = function(noteObj) {
