@@ -2,12 +2,26 @@ var displayOverlay = function() {
     overlayObject.slideToggle('fast');
 }
 
-var drag = function(ev, dd){
-        $(this).css({
-            top: dd.offsetY,
-            left: dd.offsetX
-        });
+var dragend = function() {
+    if($(this).children('p').attr('contentEditable')) return;
+    var tar = $(this);
+    noteObj = {
+        'note': tar.text(),
+        'top': tar.css('top'),
+        'left': tar.css('left'),
+        'width': tar.css('width'),
+        'height': tar.css('height')
     };
+    updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
+};
+
+var drag = function(ev, dd){
+    if($(this).children('p').attr('contentEditable')) return;
+    $(this).css({
+        top: dd.offsetY,
+        left: dd.offsetX
+    });
+};
 
 var insertNote = function(noteObj, index) {
     var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><p></p></div>');
@@ -18,24 +32,30 @@ var insertNote = function(noteObj, index) {
         'width': noteObj.width,
         'height': noteObj.height
     });
-  /*  
+    
     note.on('drag', drag);
     note.children('p').on('drag', function() {});
-    note.on('dragend', function() {
-        var tar = $(this);
-        noteObj = {
-            'note': tar.text(),
-            'top': tar.css('top'),
-            'left': tar.css('left'),
-            'width': tar.css('width'),
-            'height': tar.css('height')
-        };
-        updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
-    });
 
-*/
+    note.on('dragend', dragend);
+
     overlayObject.append(note);
     return note;
+}
+
+var disableInsertMode = function() {
+    insertMode = false;
+    /*
+     * overlayObject.off('drag', 'metro-notes-note');
+    overlayObject.off('dragend', 'metro-notes-note');
+    overlayObject.on('drag', 'metro-notes-note', drag);
+    overlayObject.on('dragend', 'metro-notes-note', dragend);
+*/
+}
+
+var enableInsertMode = function(target) {
+    insertMode = true;
+//    target.off('drag');
+ //   target.off('dragend');
 }
 
 var createNote = function(noteObj) {
@@ -84,24 +104,24 @@ if(url.length) {
 }
 overlayObject.on('click', function (e) {
     if(insertMode){
-        insertMode = false;
+        disableInsertMode();
         return false;
     }
     noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
     insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
-    insertMode = false;
+    disableInsertMode();
 });
 $('.metro-notes-note > p').on('click', function () {
    if ($(this).attr('contentEditable') != true) {
         $(this).attr('contentEditable', 'true').focus();
     }
-    insertMode = true;
+    enableInsertMode($(this).parent());
     console.log('clicking on p');
     return false;
 });
 overlayObject.on('click', '.metro-notes-note', function () {
     $('.metro-notes-note').children('p').attr('contentEditable', 'false');
-    insertMode = false;
+    disableInsertMode();
     console.log('clicking on note');
     return false;
 });
