@@ -22,7 +22,7 @@
         {
             "matches": ["http://*/*", "https://*/*"],
             "css": ["style.css"],
-            "js": ["jquery.js", "jquery.event.drag-2.0.min.js", "script.js,", "options.js"],
+            "js": ["jquery.js", "jquery.event.drag-2.0.min.js", "script.js", "options.js"],
             "run-at": "document_end" 
         }
     ]
