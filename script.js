@@ -139,7 +139,7 @@ $('.metro-notes-note > p').on('click', function () {
 //When clicking on the note makes the children uneditable.
 //TODO: Clicking on the note should make its children editable (especially now we have the drag handlers)
 overlayObject.on('click', '.metro-notes-note', function () {
-    $('.metro-notes-note').children('p').attr('contentEditable', 'false');
+    $('.metro-notes-note').children('p').attr('contentEditable', 'true');
     disableInsertMode();
     return false;
 });
