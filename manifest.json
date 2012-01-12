@@ -8,6 +8,9 @@
          "48": "icon48.png",
          "128": "icon128.png"
     },
+
+	"options_page": "options.html",
+
     "browser_action": {
 	"default_icon": "icon19.png",
         "name": "Show notes"
@@ -19,7 +22,7 @@
         {
             "matches": ["http://*/*", "https://*/*"],
             "css": ["style.css"],
-            "js": ["jquery.js", "jquery.event.drag-2.0.min.js", "script.js"],
+            "js": ["jquery.js", "jquery.event.drag-2.0.min.js", "script.js,", "options.js"],
             "run-at": "document_end" 
         }
     ]
