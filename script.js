@@ -170,8 +170,11 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     return false;
 });
 
+//TODO 
+//make this user customizable
+var toggle_key = 27		//ESC key
 $('body').keyup(function(e){
-	if(e.which == 27){
+	if(e.which == toggle_key){
 		console.log("ESC key hit!");
 		displayOverlay();
 	}
