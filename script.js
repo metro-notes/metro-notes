@@ -171,4 +171,10 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     return false;
 });
 
-
+$('body').keyup(function(e){
+	if(e.which == 27){
+		console.log("ESC key hit!");
+		displayOverlay();
+	}
+	return false;
+})
