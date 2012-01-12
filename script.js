@@ -155,7 +155,6 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     //If the note is empty, delete it.
     if($.trim(note) == '') {
         deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
-	console.log("delete me");
     } else {
         var tar = $(this).parent('.metro-notes-note');
         noteObj = {
