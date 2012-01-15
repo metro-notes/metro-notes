@@ -14,7 +14,7 @@ var drag = function(ev, dd){
 //Function called when an element is dropped after dragging.
 //Updates the elements new x, y location in localStorage
 var dragend = function() {
-    if($(this).children('p').attr('contentEditable')) return;
+    if($(this).children('p').prop('contentEditable')) return;
     var tar = $(this);
     noteObj = {
         'note': tar.text(),
@@ -49,14 +49,6 @@ var insertNote = function(noteObj, index) {
 
     overlayObject.append(note);
     return note;
-}
-
-var disableInsertMode = function() {
-    insertMode = false;
-}
-
-var enableInsertMode = function(target) {
-    insertMode = true;
 }
 
 //Create a brand new note by:
@@ -120,27 +112,26 @@ if(url.length) {
 overlayObject.on('click', function (e) {
     //If in insert mode, first exit insert mode, before inserting a new note.
     if(insertMode){
-        disableInsertMode();
+        insertMode = false;
         return false;
     }
     noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
     insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
-    enableInsertMode(notes.length);
+    insertMode = true;
 });
 
 //When an existing note's text is clicked, set it as ediable and focus on it.
 //This forces focus away from other elements, forcing them to blur.
 $('.metro-notes-note > p').on('click', function () {
-    $(this).attr('contentEditable', 'true').focus();
-    enableInsertMode($(this).parent());
+    $(this).prop('contentEditable', 'true').focus();
+    insertMode = true;
     return false;
 });
 
-//When clicking on the note makes the children uneditable.
-//TODO: Clicking on the note should make its children editable (especially now we have the drag handlers)
+//Clicking on the note should make its children editable (especially now we have the drag handlers)
 overlayObject.on('click', '.metro-notes-note', function () {
-    $('.metro-notes-note').children('p').attr('contentEditable', 'true');
-    disableInsertMode();
+    $(this).children('p').prop('contentEditable', 'true').focus();
+    insertMode = true;
     return false;
 });
 
@@ -165,18 +156,19 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
             'height': tar.css('height')
         };
         updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
-        $(this).attr('contentEditable', 'false');
+        $(this).prop('contentEditable', 'false');
     }
     return false;
 });
 
 //TODO 
 //make this user customizable
-var toggle_key = 27		//ESC key
+var toggle_key = 27;		//ESC key
 $('body').keyup(function(e){
 	if(e.which == toggle_key){
 		console.log("ESC key hit!");
 		displayOverlay();
 	}
 	return false;
-})
+});
+
