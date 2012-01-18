@@ -167,7 +167,7 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
 //var toggle_key = 27		//ESC key
 
 var toggle_key = localStorage['toggle_key'];
->>>>>>> updated options page
+
 $('body').keyup(function(e){
 	if(e.which == toggle_key){
 		console.log("ESC key hit!");
