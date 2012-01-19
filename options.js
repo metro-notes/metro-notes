@@ -9,13 +9,15 @@ var loadCurrent = function(){
 }
 
 var getKey = function(){
-	$('#toggle-key').keyup(function(e){
-		if(e.which){
+	console.log("inside getkey()");
+	//lack of focus?
+	$('#options-box').keyup(function(e){
+		//if(e.which){
 			var toggle_key = e.which;
 			console.log(toggle_key + " is hit!");
-			return true;
-		}
-		else return false;
+			//return true;
+		//}
+		return false;
 	});
 /*	{
 		//if(e.which == toggle_key){
@@ -33,12 +35,12 @@ $('#toggle-key').mouseup(function(){
 	//$('#toggle-key').replaceWith("<span id='toggle-key'>meow meow</span>");
 	var keyPressed = false;
 	
-	do{
+	//do{
 		console.log("waiting for user to hit key");
-		
+		setTimeout('getKey()', 200);
 		//key press logic
-		if(getKey()){
-			keyPressed = true;
-		}
-	}while(!keyPressed);
+	//	if(getKey()){
+	//		keyPressed = true;
+	//	}
+	//}while(!keyPressed);
 });
