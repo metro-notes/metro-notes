@@ -1,4 +1,4 @@
-#metro-notes-overlay {
+#metro-notes-overlay{
     background: rgba(255, 255, 255, 0.7); 
     position: fixed; 
     top: 0px; 
@@ -7,9 +7,33 @@
     height: 100%; 
     z-index: 9999;
     color: rgb(44, 44, 44);
+
+	
+
 }
 
-.metro-notes-note {
+@font-face {  
+    font-family: 'Raleway';  
+    src: local('Raleway') format("truetype");  
+}
+
+#wrench-overlay{
+	
+	
+}
+
+#wrench {
+    cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+
+	font-size: 32px;
+	font-family: "Raleway", sans-serif;
+	-webkit-font-smoothing: subpixel-antialiased, antialiased;
+}
+
+.metro-notes-note, .option-note{
     position: absolute;
     min-width: 10px;
     min-height: 10px;
@@ -36,3 +60,4 @@
     background-color: rgb(196, 191, 175);
     cursor: move;
 }
+

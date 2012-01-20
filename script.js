@@ -168,6 +168,13 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
 
 var toggle_key = localStorage['toggle_key'];
 
+$('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
+
+$('#wrench').click(function(){
+	//need to not create note when clicked on wrench
+	console.log("wrench clicked");
+});
+
 $('body').keyup(function(e){
 	if(e.which == toggle_key){
 		console.log("ESC key hit!");
