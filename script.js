@@ -46,9 +46,13 @@ var insertNote = function(noteObj, index) {
     note.on('dragend', dragend);
 
     overlayObject.append(note);
+	
+	console.log("note created");
+	
     return note;
 }
 
+//this function is never used
 //Create a brand new note by:
 //  Adding it to the DOM
 //  Putting it in the live note Array
@@ -58,6 +62,8 @@ var createNote = function(noteObj) {
     insertNote(noteObj, notes.length);
     notes.push(noteObj);
     localStorage.setItem(url, JSON.stringify(notes));
+
+	
 }
 
 //Update an existing note based on its index to match the given noteObj
@@ -79,6 +85,8 @@ var deleteNote = function(index) {
     $('#metro-notes-note-' + index).remove();
     notes[index] = '';
     localStorage.setItem(url, JSON.stringify(notes));
+	
+	console.log("note deleted");
 }
 
 //Execute on every page load.
@@ -168,8 +176,14 @@ $('.delete').on('click', function() {
 //var toggle_key = 27		//ESC key
 
 $('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
-$('#wrench').click(function(){
+
+
+$('#wrench').click(function(e){
 	//need to not create note when clicked on wrench
+	console.log("wrench clicked");
+	
+	return false;
+	//e.stopPropagation();
 });
 
 var toggle_key = localStorage['toggle_key'];
