@@ -57,4 +57,12 @@
     background-color: rgb(196, 191, 175);
     cursor: move;
 }
-
+.delete {
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	background-color: rgba(168, 42, 50, 0.6);
+	cursor: pointer;
+}

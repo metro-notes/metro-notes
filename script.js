@@ -14,7 +14,6 @@ var drag = function(ev, dd){
 //Function called when an element is dropped after dragging.
 //Updates the elements new x, y location in localStorage
 var dragend = function() {
-    if($(this).children('p').prop('contentEditable')) return;
     var tar = $(this);
     noteObj = {
         'note': tar.text(),
@@ -29,7 +28,7 @@ var dragend = function() {
 //Inserts a new note based on the given noteObj and index.
 //Only adds the note to the DOM (does not affect localStorage).
 var insertNote = function(noteObj, index) {
-    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><div class="handle"></div><p></p></div>');
+    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><div class="handle"><div class="delete" id="delete-' + index + '"></div></div><p></p></div>');
     //Append the note contents into the inner <p> tag of the new <div>
     note.children('p').append(noteObj.note);
     //Update location and size based on noteObj
@@ -41,7 +40,6 @@ var insertNote = function(noteObj, index) {
     });
     
     //Assign drag and dragend event handlers
-    //TODO: Maybe replace with on() and live()?
     note.drag(drag, {
         'handle': '.handle'
     });
@@ -78,7 +76,6 @@ var updateNote = function(index, noteObj) {
 //Delete the note specified by the given index
 //Removes it from the DOM and removes it from the localStorage
 var deleteNote = function(index) {
-		console.log(index);
     $('#metro-notes-note-' + index).remove();
     notes[index] = '';
     localStorage.setItem(url, JSON.stringify(notes));
@@ -101,13 +98,14 @@ if(url.length) {
     //If notes exist, for each one, insert it into the page.
     if(arr != null) {
         notes = JSON.parse(arr);
+		note_arr = [];
         for (var i in notes) {
             if(notes[i] !== '') {
-                insertNote(notes[i], i);
-            } else {
-				notes.splice(i, 1);
-			}
-        }
+				note_arr.push(notes[i]);
+				insertNote(note_arr[note_arr.length-1], note_arr.length-1);
+            }
+		}
+		notes = note_arr;
 		localStorage.setItem(url, JSON.stringify(notes));
     }
 }
@@ -122,14 +120,6 @@ overlayObject.on('click', function (e) {
     noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
     insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
     insertMode = true;
-});
-
-//When an existing note's text is clicked, set it as ediable and focus on it.
-//This forces focus away from other elements, forcing them to blur.
-$('.metro-notes-note > p').on('click', function () {
-    $(this).prop('contentEditable', 'true').focus();
-    insertMode = true;
-    return false;
 });
 
 //Clicking on the note should make its children editable (especially now we have the drag handlers)
@@ -149,7 +139,6 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     var note = $(this).text();
     //If the note is empty, delete it.
     if($.trim(note) == '') {
-		console.log($(this));
 		try {
 			deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
 		} catch (e) { console.log(e); }
@@ -168,23 +157,24 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     return false;
 });
 
+//Delete notes when delte is clicked.
+$('.delete').on('click', function() {
+	deleteNote($(this).attr('id').replace('delete-', ''));
+});
+
 //TODO 
 //make this user customizable
 
 //var toggle_key = 27		//ESC key
 
-//var toggle_key = localStorage['toggle_key'];
-
 $('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
-
 $('#wrench').click(function(){
 	//need to not create note when clicked on wrench
-	console.log("wrench clicked");
 });
 
+var toggle_key = localStorage['toggle_key'];
 $('body').keyup(function(e){
 	if(e.which == toggle_key){
-		console.log("ESC key hit!");
 		displayOverlay();
 	}
 	return false;
