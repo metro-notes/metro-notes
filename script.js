@@ -78,6 +78,7 @@ var updateNote = function(index, noteObj) {
 //Delete the note specified by the given index
 //Removes it from the DOM and removes it from the localStorage
 var deleteNote = function(index) {
+		console.log(index);
     $('#metro-notes-note-' + index).remove();
     notes[index] = '';
     localStorage.setItem(url, JSON.stringify(notes));
@@ -103,8 +104,11 @@ if(url.length) {
         for (var i in notes) {
             if(notes[i] !== '') {
                 insertNote(notes[i], i);
-            }
+            } else {
+				notes.splice(i, 1);
+			}
         }
+		localStorage.setItem(url, JSON.stringify(notes));
     }
 }
 
@@ -145,7 +149,10 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     var note = $(this).text();
     //If the note is empty, delete it.
     if($.trim(note) == '') {
-        deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
+		console.log($(this));
+		try {
+			deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
+		} catch (e) { console.log(e); }
     } else {
         var tar = $(this).parent('.metro-notes-note');
         noteObj = {
@@ -166,7 +173,7 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
 
 //var toggle_key = 27		//ESC key
 
-var toggle_key = localStorage['toggle_key'];
+//var toggle_key = localStorage['toggle_key'];
 
 $('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
 
