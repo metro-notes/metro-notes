@@ -44,11 +44,15 @@ var insertNote = function(noteObj, index) {
         'handle': '.handle'
     });
     note.on('dragend', dragend);
+	
+	//Delete notes when delte is clicked.
+	note.on('click', '.delete', function() {
+		console.log('delete');
+		deleteNote($(this).attr('id').replace('delete-', ''));
+	});
 
     overlayObject.append(note);
-	
 	console.log("note created");
-	
     return note;
 }
 
@@ -163,11 +167,6 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
         $(this).prop('contentEditable', 'false');
     }
     return false;
-});
-
-//Delete notes when delte is clicked.
-$('.delete').on('click', function() {
-	deleteNote($(this).attr('id').replace('delete-', ''));
 });
 
 //TODO 
