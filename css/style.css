@@ -13,7 +13,7 @@
   font-family: 'Raleway';
   font-style: normal;
   font-weight: 100;
-  src: local('Raleway'), url('http://themes.googleusercontent.com/static/fonts/raleway/v5/RJMlAoFXXQEzZoMSUteGWLO3LdcAZYWl9Si6vvxL-qU.woff') format('woff');
+  src: local('Raleway'), url('chrome-extension://ggoohignpmohdlljhmjckelogohlfpeo/css/Raleway-Thin.ttf');
 }
 
 #wrench-overlay{
