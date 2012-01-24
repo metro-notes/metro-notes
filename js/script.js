@@ -1,5 +1,6 @@
 //Fucntion call that toggles the overlay on the screen.
 var displayOverlay = function() {
+	wrenchObject.hide();
     overlayObject.slideToggle('fast');
 }
 
@@ -95,10 +96,17 @@ var deleteNote = function(index) {
 
 //Execute on every page load.
 var overlaySelector = '#metro-notes-overlay';
+var wrenchSelector = '#wrench-overlay';
+
 //Insert the overlay object into the page then hide it.
 $('body').append('<div id="metro-notes-overlay"></div>');
+//Append wrench overlay object existing overlay
+$(overlaySelector).append('<div id="wrench-overlay"></div>');
 var overlayObject = $(overlaySelector);
+var wrenchObject = $(wrenchSelector);
 overlayObject.hide();
+wrenchObject.hide();
+
 var url = document.URL;     //Page URL
 var lastzindex = 1;         //z-Index tracker to allow notes to properly overlap
 var notes = new Array();    //Array of notes
@@ -169,6 +177,13 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
     return false;
 });
 
+
+//Delete notes when delete is clicked.
+$('.delete').on('click', function() {
+	console.log("delete box clicked");
+	deleteNote($(this).attr('id').replace('delete-', ''));
+});
+
 //TODO 
 //make this user customizable
 
@@ -176,10 +191,11 @@ overlayObject.on('blur', '.metro-notes-note > p', function () {
 
 $('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
 
-
 $('#wrench').click(function(e){
 	//need to not create note when clicked on wrench
 	console.log("wrench clicked");
+
+	wrenchObject.slideToggle('fast');
 	
 	return false;
 	//e.stopPropagation();
