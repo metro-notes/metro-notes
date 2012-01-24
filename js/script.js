@@ -191,6 +191,10 @@ $('.delete').on('click', function() {
 
 $('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
 
+$('#wrench-overlay').click(function(e){
+	//do not create notes when clicking on this layer
+	return false;
+})
 $('#wrench').click(function(e){
 	//need to not create note when clicked on wrench
 	console.log("wrench clicked");
