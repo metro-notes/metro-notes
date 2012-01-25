@@ -21,11 +21,12 @@
     color: rgb(44, 44, 44);
 }
 
+/*font died again*/
 @font-face {
   font-family: 'Raleway';
   font-style: normal;
   font-weight: 100;
-  src: local('Raleway'), url('chrome-extension://ggoohignpmohdlljhmjckelogohlfpeo/css/Raleway-Thin.ttf');
+  src: local(Raleway-Thin.ttf) format('truetype');
 }
 
 #wrench {
