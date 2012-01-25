@@ -11,7 +11,7 @@ var loadCurrent = function(){
 var getKey = function(){
 	console.log("inside getkey()");
 	//lack of focus?
-	$('#options-box').keyup(function(e){
+	$('body').keyup(function(e){
 		//if(e.which){
 			var toggle_key = e.which;
 			console.log(toggle_key + " is hit!");

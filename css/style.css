@@ -30,16 +30,25 @@
 
 }
 
-#wrench {
-    cursor: pointer;
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-	z-index: 9999;
-
+.wrench{
 	font-size: 32px;
 	font-family: "Raleway", sans-serif;
 	-webkit-font-smoothing: subpixel-antialiased, antialiased;
+	
+	cursor: pointer;
+    position: absolute;
+	z-index: 9999;
+}
+
+#toggle-key{
+	font-size: 28px;
+	
+	bottom: 50px;
+	left: 15px;
+}
+#wrench {
+    bottom: 15px;
+    left: 15px;
 }
 
 .metro-notes-note, .option-note{

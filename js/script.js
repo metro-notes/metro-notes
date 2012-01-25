@@ -95,7 +95,6 @@ var deleteNote = function(index) {
 
 //Execute on every page load.
 var overlaySelector = '#metro-notes-overlay';
-var wrenchSelector = '#wrench-overlay';
 
 //Insert the overlay object into the page then hide it.
 $('body').append('<div id="metro-notes-overlay"></div>');
@@ -184,12 +183,33 @@ $('.delete').on('click', function() {
 
 //var toggle_key = 27		//ESC key
 
-$('#metro-notes-overlay').append("<div id='wrench'>wrench</div>");
+$(overlaySelector).append("<div class='wrench' id='wrench'>wrench</div>");
+$(overlaySelector).append("<div class='wrench' id='toggle-key'>toggle key</div>");
 
+var toggleSelector = '#toggle-key';
+var wrenchSelector = '#wrench';
+$(toggleSelector).hide();
 
 $('#wrench').click(function(e){
 	//need to not create note when clicked on wrench
 	console.log("wrench clicked");
+	$(toggleSelector).slideToggle('fast');
+	
+	return false;
+	//e.stopPropagation();
+});
+
+//TODO
+//break out of function after keypress
+//store setting
+//load default?
+/************Work in Progress*********************/
+$(toggleSelector).click(function(e){
+	//need to not create note when clicked on wrench
+	console.log("toggle clicked");
+	
+	console.log("waiting for user to hit key");
+	setTimeout('getKey()', 200);
 	
 	return false;
 	//e.stopPropagation();
@@ -203,3 +223,15 @@ $('body').keyup(function(e){
 	return false;
 });
 
+var getKey = function(){
+	console.log("inside getkey()");
+	//lack of focus?
+	$('body').keyup(function(e){
+		//if(e.which){
+			var toggle_key = e.which;
+			console.log(toggle_key + " is hit!");
+
+		return false;
+	});
+}
+/********************************************/
