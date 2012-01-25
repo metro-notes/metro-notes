@@ -23,10 +23,11 @@
 
 /*font died again*/
 @font-face {
-  font-family: 'Raleway';
-  font-style: normal;
-  font-weight: 100;
-  src: local(Raleway-Thin.ttf) format('truetype');
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 100;
+	src: local('Raleway'), url('chrome-extension://icfacnkobmhooipffenkhdnidnfdphok/css/Raleway-Thin.ttf');
+
 }
 
 #wrench {
