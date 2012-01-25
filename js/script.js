@@ -203,34 +203,58 @@ $('#wrench').click(function(e){
 //break out of function after keypress
 //store setting
 //load default?
+//2 keypresses to toggle
 /************Work in Progress*********************/
+$('body').load(function(){
+	localStorage['toggle-key'] = 27;
+	console.log("body loaded");
+	
+	return false;
+});
+
 $(toggleSelector).click(function(e){
 	//need to not create note when clicked on wrench
 	console.log("toggle clicked");
 	
 	console.log("waiting for user to hit key");
-	setTimeout('getKey()', 200);
+	setTimeout('getFirstKey()', 200);
 	
 	return false;
 	//e.stopPropagation();
 });
 
-var toggle_key = localStorage['toggle_key'];
+var toggle_key1 = localStorage['toggle-key1'];
+var toggle_key2 = localStorage['toggle-key2'];
+
+/*
 $('body').keyup(function(e){
 	if(e.which == toggle_key){
+		console.log("toggle key hit");
 		displayOverlay();
 	}
 	return false;
 });
-
-var getKey = function(){
+*/
+var getSecondKey = function(){
+	$('body').keydown(function(e){
+		
+		console.log(e.which + " hit as second key");
+		return false;
+	});
+}
+var getFirstKey = function(){
 	console.log("inside getkey()");
 	//lack of focus?
 	$('body').keyup(function(e){
-		//if(e.which){
-			var toggle_key = e.which;
-			console.log(toggle_key + " is hit!");
-
+		switch(e.which){
+			case 17: 
+				console.log("ctrl hit");
+				break;
+			case 18: console.log("alt hit"); break;
+			case 91: console.log("cmd hit"); break;
+			default: console.log(e.which + " hit"); break;
+		}
+		
 		return false;
 	});
 }
