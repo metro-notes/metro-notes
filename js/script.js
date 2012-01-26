@@ -204,20 +204,28 @@ $('#wrench').click(function(e){
 //store setting
 //load default?
 //2 keypresses to toggle
-/************Work in Progress*********************/
+var loadDefault = function(){
+	//loads on very first execution
+}
+
+var loadCurrent = function(){
+	//loads at start of every execution except for first
+}
+/*
 $('body').load(function(){
 	localStorage['toggle-key'] = 27;
 	console.log("body loaded");
 	
 	return false;
 });
+*/
 
 $(toggleSelector).click(function(e){
 	//need to not create note when clicked on wrench
 	console.log("toggle clicked");
 	
 	console.log("waiting for user to hit key");
-	setTimeout('getFirstKey()', 200);
+	getKey().delay(200);
 	
 	return false;
 	//e.stopPropagation();
@@ -226,64 +234,34 @@ $(toggleSelector).click(function(e){
 var toggle_key1 = localStorage['toggle-key1'];
 var toggle_key2 = localStorage['toggle-key2'];
 var toggle_keys = new Array();
-/*
-$('body').keyup(function(e){
-	if(e.which == toggle_key){
-		console.log("toggle key hit");
-		displayOverlay();
-	}
-	return false;
-});
-*/
-var getSecondKey = function(i){
-	$('body').keydown(function(i){
-		if(modKeyPress)
-			console.log(i.which + " hit as second key");
-		else
-			console.log(i.which + " hit as first key");
-		return false;
-	});
-}
 
-//bool for whether or not a modifier key has been pressed or not
-var modKeyPress = false;
-var getFirstKey = function(){
-	console.log("inside getFirstKey()");
+var modKey = null;
+var toggleKey = null;
+
+var getKey = function(){
 	
 	//simple way of attempting this
 	$('body').keydown(function(e){
 		if(e.ctrlKey && e.which != 17){
 			console.log("ctrl " + e.which + " is hit");
+			modKey = 17;
+			toggleKey = e.which;
 		}
 		else if(e.altKey && e.which != 18){
 			console.log("alt " + e.which + " is hit");
+			modKey = 17;
+			toggleKey = e.which;
 		}
 		else if(e.metaKey && e.which != 91){
 			console.log("cmd " + e.which + " is hit");
+			modKey = 17;
+			toggleKey = e.which;
 		}
 		else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
 			console.log(e.which + " is hit");
+			toggleKey = e.which;
 		}
-		/*
-		if(e.ctrlKey){
-			console.log("ctrl hit");
-			modKeyPress = true;
-			toggle_keys.push(e.which);
-			getSecondKey();
-		}
-		else console.log("ctrl not hit");
-		*/
-		/*switch(e.which){
-			case 17: 
-				console.log("ctrl hit");
-				break;
-			case 18: console.log("alt hit"); break;
-			case 91: console.log("cmd hit"); break;
-			default: console.log(e.which + " hit"); break;
-		}*/
-		
-		
+
 		return false;
 	});
 }
-/********************************************/
