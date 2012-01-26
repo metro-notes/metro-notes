@@ -225,7 +225,7 @@ $(toggleSelector).click(function(e){
 
 var toggle_key1 = localStorage['toggle-key1'];
 var toggle_key2 = localStorage['toggle-key2'];
-
+var toggle_keys = new Array();
 /*
 $('body').keyup(function(e){
 	if(e.which == toggle_key){
@@ -235,25 +235,53 @@ $('body').keyup(function(e){
 	return false;
 });
 */
-var getSecondKey = function(){
-	$('body').keydown(function(e){
-		
-		console.log(e.which + " hit as second key");
+var getSecondKey = function(i){
+	$('body').keydown(function(i){
+		if(modKeyPress)
+			console.log(i.which + " hit as second key");
+		else
+			console.log(i.which + " hit as first key");
 		return false;
 	});
 }
+
+//bool for whether or not a modifier key has been pressed or not
+var modKeyPress = false;
 var getFirstKey = function(){
-	console.log("inside getkey()");
-	//lack of focus?
-	$('body').keyup(function(e){
-		switch(e.which){
+	console.log("inside getFirstKey()");
+	
+	//simple way of attempting this
+	$('body').keydown(function(e){
+		if(e.ctrlKey && e.which != 17){
+			console.log("ctrl " + e.which + " is hit");
+		}
+		else if(e.altKey && e.which != 18){
+			console.log("alt " + e.which + " is hit");
+		}
+		else if(e.metaKey && e.which != 91){
+			console.log("cmd " + e.which + " is hit");
+		}
+		else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
+			console.log(e.which + " is hit");
+		}
+		/*
+		if(e.ctrlKey){
+			console.log("ctrl hit");
+			modKeyPress = true;
+			toggle_keys.push(e.which);
+			getSecondKey();
+		}
+		else console.log("ctrl not hit");
+		*/
+		/*switch(e.which){
 			case 17: 
 				console.log("ctrl hit");
 				break;
 			case 18: console.log("alt hit"); break;
 			case 91: console.log("cmd hit"); break;
 			default: console.log(e.which + " hit"); break;
-		}
+		}*/
+		
 		
 		return false;
 	});
