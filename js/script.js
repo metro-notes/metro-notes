@@ -1,6 +1,11 @@
 //Fucntion call that toggles the overlay on the screen.
 var displayOverlay = function() {
     overlayObject.slideToggle('fast');
+	
+	if(localStorage['current'])
+		loadCurrentSetting();
+	else
+		loadDefaultSetting();
 }
 
 //Handles moving the element whenn it is dragged
@@ -204,12 +209,38 @@ $('#wrench').click(function(e){
 //store setting
 //load default?
 //2 keypresses to toggle
-var loadDefault = function(){
-	//loads on very first execution
+
+//loads default settings on first execution
+var loadDefaultSetting = function(){
+	console.log("loading default settings");
+	
+	localStorage['toggle-key'] = 27 //ESC
+	toggleKey = localStorage['toggle-key'];
+	
+	return false;
 }
 
-var loadCurrent = function(){
-	//loads at start of every execution except for first
+//loads at start of every execution except for first
+var loadCurrentSetting = function(){
+	console.log("loading current settings");
+	if(localStorage['mod-key'])
+		modKey = localStorage['mod-key'];
+	
+	toggleKey = localStorage['toggle-key'];
+}
+
+//saves current setting into localStorage
+var saveCurrentSetting = function(){
+	console.log("saving current settings");
+	//loads default unless settings have been changed
+	localStorage['current'] = true;
+	
+	if(modKey)
+		localStorage['mod-key'] = modKey;
+		
+	localStorage['toggle-key'] = toggleKey;
+	
+	return false;
 }
 /*
 $('body').load(function(){
@@ -220,20 +251,23 @@ $('body').load(function(){
 });
 */
 
+$('body').keydown(function(e){
+	//not working once toggle key changes
+	if(e.which == toggleKey){
+		displayOverlay();
+	}
+})
+
 $(toggleSelector).click(function(e){
 	//need to not create note when clicked on wrench
 	console.log("toggle clicked");
 	
 	console.log("waiting for user to hit key");
-	getKey().delay(200);
+	getKey();
 	
 	return false;
 	//e.stopPropagation();
 });
-
-var toggle_key1 = localStorage['toggle-key1'];
-var toggle_key2 = localStorage['toggle-key2'];
-var toggle_keys = new Array();
 
 var modKey = null;
 var toggleKey = null;
@@ -262,6 +296,8 @@ var getKey = function(){
 			toggleKey = e.which;
 		}
 
+		saveCurrentSetting();
+		//need to break out of this function
 		return false;
 	});
 }
