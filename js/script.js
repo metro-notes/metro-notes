@@ -1,11 +1,16 @@
 //Fucntion call that toggles the overlay on the screen.
 var displayOverlay = function() {
+	$(toggleSelector).hide();
+	
     overlayObject.slideToggle('fast');
+	
 	
 	if(localStorage['current'])
 		loadCurrentSetting();
 	else
 		loadDefaultSetting();
+		
+	
 }
 
 //Handles moving the element whenn it is dragged
@@ -242,28 +247,25 @@ var saveCurrentSetting = function(){
 	
 	return false;
 }
-/*
-$('body').load(function(){
-	localStorage['toggle-key'] = 27;
-	console.log("body loaded");
-	
-	return false;
-});
-*/
 
-$('body').keydown(function(e){
+
+$('body').on('keydown', toggleListener);
+
+var toggleListener = function(e){
 	//not working once toggle key changes
+	console.log("hitting for toggle key");
 	if(e.which == toggleKey){
 		displayOverlay();
 	}
-})
+}
 
-$(toggleSelector).click(function(e){
+/*
+$(toggleSelector).on('click', function(e){
 	//need to not create note when clicked on wrench
 	console.log("toggle clicked");
 	
 	console.log("waiting for user to hit key");
-	getKey();
+	$('body').on('keydown', getToggleKey);
 	
 	return false;
 	//e.stopPropagation();
@@ -272,32 +274,31 @@ $(toggleSelector).click(function(e){
 var modKey = null;
 var toggleKey = null;
 
-var getKey = function(){
+var getToggleKey = function(e){
+	if(e.ctrlKey && e.which != 17){
+		console.log("ctrl " + e.which + " is hit");
+		modKey = 17;
+		toggleKey = e.which;
+	}
+	else if(e.altKey && e.which != 18){
+		console.log("alt " + e.which + " is hit");
+		modKey = 17;
+		toggleKey = e.which;
+	}
+	else if(e.metaKey && e.which != 91){
+		console.log("cmd " + e.which + " is hit");
+		modKey = 17;
+		toggleKey = e.which;
+	}
+	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
+		console.log(e.which + " is hit");
+		toggleKey = e.which;
+	}
 	
-	//simple way of attempting this
-	$('body').keydown(function(e){
-		if(e.ctrlKey && e.which != 17){
-			console.log("ctrl " + e.which + " is hit");
-			modKey = 17;
-			toggleKey = e.which;
-		}
-		else if(e.altKey && e.which != 18){
-			console.log("alt " + e.which + " is hit");
-			modKey = 17;
-			toggleKey = e.which;
-		}
-		else if(e.metaKey && e.which != 91){
-			console.log("cmd " + e.which + " is hit");
-			modKey = 17;
-			toggleKey = e.which;
-		}
-		else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
-			console.log(e.which + " is hit");
-			toggleKey = e.which;
-		}
-
-		saveCurrentSetting();
-		//need to break out of this function
-		return false;
-	});
+	$('body').off('keydown', getToggleKey);
+	$(toggleSelector).off('click');
+	saveCurrentSetting();
+	
+	return false;
 }
+*/
