@@ -1,16 +1,30 @@
-//Fucntion call that toggles the overlay on the screen.
+//Function call that toggles the overlay on the screen.
 var displayOverlay = function() {
-	$(toggleSelector).hide();
+
+	if($(overlaySelector).css('display') == 'none'){
+		$(toggleSelector).hide();
+		
+		loadSetting();
+	}
 	
-    overlayObject.slideToggle('fast');
-	
+	overlayObject.slideToggle('fast');
+}
+
+//desperate. this is probably bad idea
+//need to investigate better way, integrate into displayOverlay()? 
+//has to load settings on every page, otherwise toggle key will not be recognized
+$(document).ready(function(){
+
+	loadSetting();
+	$('body').on('keydown', toggleListener);
+});
+
+var loadSetting = function(){
 	
 	if(localStorage['current'])
 		loadCurrentSetting();
 	else
 		loadDefaultSetting();
-		
-	
 }
 
 //Handles moving the element whenn it is dragged
@@ -188,32 +202,24 @@ $('.delete').on('click', function() {
 	deleteNote($(this).attr('id').replace('delete-', ''));
 });
 
-//TODO 
-//make this user customizable
-
-//var toggle_key = 27		//ESC key
-
+//TODO
+//need to display what hot key is selected
 $(overlaySelector).append("<div class='wrench' id='wrench'>wrench</div>");
 $(overlaySelector).append("<div class='wrench' id='toggle-key'>toggle key</div>");
 
 var toggleSelector = '#toggle-key';
 var wrenchSelector = '#wrench';
-$(toggleSelector).hide();
+
+//$(toggleSelector).hide();
+$('body').on('keydown', toggleListener);
 
 $('#wrench').click(function(e){
-	//need to not create note when clicked on wrench
 	console.log("wrench clicked");
 	$(toggleSelector).slideToggle('fast');
 	
 	return false;
 	//e.stopPropagation();
 });
-
-//TODO
-//break out of function after keypress
-//store setting
-//load default?
-//2 keypresses to toggle
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
@@ -248,18 +254,20 @@ var saveCurrentSetting = function(){
 	return false;
 }
 
-
-$('body').on('keydown', toggleListener);
-
+//waits to check if toggle key is hit to display overlay
 var toggleListener = function(e){
-	//not working once toggle key changes
-	console.log("hitting for toggle key");
+	//TODO
+	//need to account for mod keys
+	console.log("waiting for toggle key");
 	if(e.which == toggleKey){
+		console.log("hitting toggle key");
 		displayOverlay();
 	}
+	
+	return false;
 }
 
-/*
+//on click, user is prompted to set toggle key
 $(toggleSelector).on('click', function(e){
 	//need to not create note when clicked on wrench
 	console.log("toggle clicked");
@@ -274,6 +282,7 @@ $(toggleSelector).on('click', function(e){
 var modKey = null;
 var toggleKey = null;
 
+//logic to set key
 var getToggleKey = function(e){
 	if(e.ctrlKey && e.which != 17){
 		console.log("ctrl " + e.which + " is hit");
@@ -282,12 +291,12 @@ var getToggleKey = function(e){
 	}
 	else if(e.altKey && e.which != 18){
 		console.log("alt " + e.which + " is hit");
-		modKey = 17;
+		modKey = 18;
 		toggleKey = e.which;
 	}
 	else if(e.metaKey && e.which != 91){
 		console.log("cmd " + e.which + " is hit");
-		modKey = 17;
+		modKey = 91;
 		toggleKey = e.which;
 	}
 	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
@@ -296,9 +305,8 @@ var getToggleKey = function(e){
 	}
 	
 	$('body').off('keydown', getToggleKey);
-	$(toggleSelector).off('click');
+	//$(toggleSelector).off('click');
 	saveCurrentSetting();
 	
 	return false;
 }
-*/
