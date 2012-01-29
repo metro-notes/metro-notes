@@ -19,6 +19,8 @@ $(document).ready(function(){
 	$('body').on('keydown', toggleListener);
 });
 
+
+
 var loadSetting = function(){
 	
 	if(localStorage['current'])
@@ -263,8 +265,6 @@ var toggleListener = function(e){
 		console.log("hitting toggle key");
 		displayOverlay();
 	}
-	
-	return false;
 }
 
 //on click, user is prompted to set toggle key
@@ -275,6 +275,7 @@ $(toggleSelector).on('click', function(e){
 	console.log("waiting for user to hit key");
 	$('body').on('keydown', getToggleKey);
 	
+	//returning false to stop propagation and creating a note
 	return false;
 	//e.stopPropagation();
 });
