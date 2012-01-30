@@ -227,7 +227,7 @@ $('#wrench').click(function(e){
 var loadDefaultSetting = function(){
 	console.log("loading default settings");
 	
-	localStorage['toggle-key'] = 27 //ESC
+	localStorage['toggle-key'] = 191 // '/' character
 	toggleKey = localStorage['toggle-key'];
 	
 	return false;
@@ -245,13 +245,17 @@ var loadCurrentSetting = function(){
 //saves current setting into localStorage
 var saveCurrentSetting = function(){
 	console.log("saving current settings");
+	
+	
 	//loads default unless settings have been changed
 	localStorage['current'] = true;
 	
-	if(modKey)
+	//if(modKey)
 		localStorage['mod-key'] = modKey;
 		
 	localStorage['toggle-key'] = toggleKey;
+	
+	
 	
 	return false;
 }
@@ -260,9 +264,29 @@ var saveCurrentSetting = function(){
 var toggleListener = function(e){
 	//TODO
 	//need to account for mod keys
+	var toggleHit = false;
+	
 	console.log("waiting for toggle key");
-	if(e.which == toggleKey){
-		console.log("hitting toggle key");
+	switch(modKey){
+		case 17:
+			if(e.which == toggleKey && e.ctrlKey)
+				toggleHit = true;
+			break;
+		case 18:
+			if(e.which == toggleKey && e.altKey)
+				toggleHit = true;
+			break;
+		case 91:
+			if(e.which == toggleKey && e.cmdKey)
+				toggleHit = true;
+			break;
+		default:
+			if(e.which == toggleKey)
+				toggleHit = true;
+	}
+	
+	if(toggleHit){
+		console.log("hit toggle key");
 		displayOverlay();
 	}
 }
@@ -302,10 +326,11 @@ var getToggleKey = function(e){
 	}
 	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
 		console.log(e.which + " is hit");
+		modKey = undefined;
 		toggleKey = e.which;
 	}
 	
-	$('body').off('keydown', getToggleKey);
+	//$('body').off('keydown', getToggleKey);
 	//$(toggleSelector).off('click');
 	saveCurrentSetting();
 	
