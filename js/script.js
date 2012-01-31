@@ -235,7 +235,9 @@ var loadDefaultSetting = function(){
 	console.log("loading default settings");
 	
 	localStorage['toggle-key'] = 191 // '/' character
+	localStorage['mod-key'] = undefined;
 	toggleKey = localStorage['toggle-key'];
+	modKey = localStorage['mod-key'];
 	
 	return false;
 }
@@ -274,7 +276,9 @@ var toggleListener = function(e){
 	var toggleHit = false;
 	
 	console.log("waiting for toggle key");
+
 	switch(modKey){
+		
 		case 17:
 			if(e.which == toggleKey && e.ctrlKey)
 				toggleHit = true;
@@ -288,10 +292,10 @@ var toggleListener = function(e){
 				toggleHit = true;
 			break;
 		default:
-			if(e.which == toggleKey)
-				toggleHit = true;
+			if(e.which == toggleKey && !e.ctrlKey && !e.altKey && !e.cmdKey)
+				toggleHit = true;	
 	}
-	
+
 	if(toggleHit){
 		console.log("hit toggle key");
 		displayOverlay();
@@ -337,7 +341,10 @@ var getToggleKey = function(e){
 		toggleKey = e.which;
 	}
 	
-	//$('body').off('keydown', getToggleKey);
+	$('body').on('keyup', function(){
+		$('body').off('keydown', getToggleKey);
+		return false;
+	});
 	//$(toggleSelector).off('click');
 	saveCurrentSetting();
 	
