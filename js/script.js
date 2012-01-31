@@ -234,7 +234,7 @@ $('#wrench').click(function(e){
 var loadDefaultSetting = function(){
 	console.log("loading default settings");
 	
-	localStorage['toggle-key'] = 191 // '/' character
+	localStorage['toggle-key'] = undefined;
 	localStorage['mod-key'] = undefined;
 	toggleKey = localStorage['toggle-key'];
 	modKey = localStorage['mod-key'];
@@ -276,30 +276,58 @@ var toggleListener = function(e){
 	var toggleHit = false;
 	
 	console.log("waiting for toggle key");
-
+	console.log("toggleKey: " + toggleKey);
+	console.log("modKey: " + modKey);
+	
+	/*
 	switch(modKey){
-		
 		case 17:
-			if(e.which == toggleKey && e.ctrlKey)
+			if(e.which == toggleKey && e.ctrlKey){
+				console.log("ctrl " + e.which + " is hit");
 				toggleHit = true;
+			}	
 			break;
 		case 18:
-			if(e.which == toggleKey && e.altKey)
+			if(e.which == toggleKey && e.altKey){
+				console.log("alt " + e.which + " is hit");
 				toggleHit = true;
+			}
 			break;
 		case 91:
-			if(e.which == toggleKey && e.cmdKey)
+			if(e.which == toggleKey && e.cmdKey){
+				console.log("cmd " + e.which + " is hit");
 				toggleHit = true;
+			}
 			break;
 		default:
-			if(e.which == toggleKey && !e.ctrlKey && !e.altKey && !e.cmdKey)
+			if(e.which == toggleKey && e.ctrlKey == false && !e.altKey == false && !e.cmdKey == false){
 				toggleHit = true;	
+				console.log(e.which + " is hit");
+			}
 	}
-
+	*/
+	if(e.which == toggleKey && e.ctrlKey){
+		console.log("ctrl " + e.which + " is hit");
+		toggleHit = true;
+	}
+	else if(e.which == toggleKey && e.altKey){
+		console.log("alt " + e.which + " is hit");
+		toggleHit = true;
+	}
+	else if(e.which == toggleKey && e.cmdKey){
+		console.log("cmd " + e.which + " is hit");
+		toggleHit = true;
+	}
+	else if(e.which == toggleKey && e.ctrlKey == false && !e.altKey == false && !e.cmdKey == false){
+		toggleHit = true;	
+		console.log(e.which + " is hit");
+	}
+	
 	if(toggleHit){
 		console.log("hit toggle key");
 		displayOverlay();
 	}
+	
 }
 
 //on click, user is prompted to set toggle key
@@ -321,22 +349,22 @@ var toggleKey = null;
 //logic to set key
 var getToggleKey = function(e){
 	if(e.ctrlKey && e.which != 17){
-		console.log("ctrl " + e.which + " is hit");
+		console.log("ctrl " + e.which + " is saved");
 		modKey = 17;
 		toggleKey = e.which;
 	}
 	else if(e.altKey && e.which != 18){
-		console.log("alt " + e.which + " is hit");
+		console.log("alt " + e.which + " is saved");
 		modKey = 18;
 		toggleKey = e.which;
 	}
 	else if(e.metaKey && e.which != 91){
-		console.log("cmd " + e.which + " is hit");
+		console.log("cmd " + e.which + " is saved");
 		modKey = 91;
 		toggleKey = e.which;
 	}
 	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
-		console.log(e.which + " is hit");
+		console.log(e.which + " is saved");
 		modKey = undefined;
 		toggleKey = e.which;
 	}
