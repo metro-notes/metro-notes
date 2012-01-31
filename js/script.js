@@ -128,6 +128,13 @@ var overlayObject = $(overlaySelector);
 overlayObject.hide();
 
 var url = document.URL;     //Page URL
+console.log(url);
+if(url.indexOf('www.google.com') != -1) {
+	overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
+	console.log('AUGH');
+	//insert warning about google instant
+}
+
 var lastzindex = 1;         //z-Index tracker to allow notes to properly overlap
 var notes = new Array();    //Array of notes
 var insertMode = false;

@@ -26,11 +26,11 @@
 	font-family: 'Raleway';
 	font-style: normal;
 	font-weight: 100;
-	src: local('Raleway'), url('chrome-extension://icfacnkobmhooipffenkhdnidnfdphok/css/Raleway-Thin.ttf');
+	src: local('Raleway'), url('http://themes.googleusercontent.com/static/fonts/raleway/v5/RJMlAoFXXQEzZoMSUteGWLO3LdcAZYWl9Si6vvxL-qU.woff');
 
 }
 
-.wrench{
+.wrench, #instant_issue{
 	font-size: 32px;
 	font-family: "Raleway", sans-serif;
 	-webkit-font-smoothing: subpixel-antialiased, antialiased;
@@ -86,4 +86,12 @@
 	right: 2px;
 	background-color: rgba(168, 42, 50, 0.6);
 	cursor: pointer;
+}
+
+#instant_issue {
+	position: fixed;
+	font-size: 26px;
+	top: 30px;
+	left: 15px;
+	margin: auto;
 }
