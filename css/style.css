@@ -40,7 +40,7 @@
 	z-index: 9999;
 }
 
-#toggle-key{
+#toggle-key-label, #toggle-key{
 	font-size: 24px;
 	
 	bottom: 60px;
@@ -51,7 +51,7 @@
     left: 15px;
 }
 
-.metro-notes-note, .option-note{
+.metro-notes-note{
     position: absolute;
     min-width: 10px;
     min-height: 10px;

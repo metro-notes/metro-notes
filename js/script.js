@@ -164,7 +164,7 @@ overlayObject.on('click', function (e) {
         insertMode = false;
         return false;
     }
-    noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
+    noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '150px', 'height': '125px'};
     insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
     insertMode = true;
 });
@@ -214,18 +214,27 @@ $('.delete').on('click', function() {
 //TODO
 //need to display what hot key is selected
 $(overlaySelector).append("<div class='wrench' id='wrench'>wrench</div>");
-$(overlaySelector).append("<div class='wrench' id='toggle-key'>toggle key</div>");
+$(overlaySelector).append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span><span id='hit-some-key'>hit some keys please</span></div>");
 
-var toggleSelector = '#toggle-key';
+$('#hit-some-key').hide();
+
+var toggleSelector = '#toggle-key-label';
 var wrenchSelector = '#wrench';
 
-//$(toggleSelector).hide();
 $('body').on('keydown', toggleListener);
 
 $('#wrench').click(function(e){
 	console.log("wrench clicked");
+	
+	//setToggleString();
+	//$('toggle-key').text(toggleString);
+	
 	$(toggleSelector).slideToggle('fast');
 	
+	
+	//TODO
+	//if wrench is clicked again while toggle listener is active, disable toggle listener
+	//how to check if event is running
 	return false;
 	//e.stopPropagation();
 });
@@ -254,58 +263,24 @@ var loadCurrentSetting = function(){
 //saves current setting into localStorage
 var saveCurrentSetting = function(){
 	console.log("saving current settings");
-	
-	
 	//loads default unless settings have been changed
 	localStorage['current'] = true;
-	
-	//if(modKey)
-		localStorage['mod-key'] = modKey;
-		
+	localStorage['mod-key'] = modKey;
 	localStorage['toggle-key'] = toggleKey;
-	
-	
-	
+		
 	return false;
 }
 
 //waits to check if toggle key is hit to display overlay
 var toggleListener = function(e){
 	//TODO
-	//need to account for mod keys
+	//need to fix single key
 	var toggleHit = false;
 	
-	console.log("waiting for toggle key");
+	console.log(e.which + " is hit, waiting for toggle key");
 	console.log("toggleKey: " + toggleKey);
 	console.log("modKey: " + modKey);
 	
-	/*
-	switch(modKey){
-		case 17:
-			if(e.which == toggleKey && e.ctrlKey){
-				console.log("ctrl " + e.which + " is hit");
-				toggleHit = true;
-			}	
-			break;
-		case 18:
-			if(e.which == toggleKey && e.altKey){
-				console.log("alt " + e.which + " is hit");
-				toggleHit = true;
-			}
-			break;
-		case 91:
-			if(e.which == toggleKey && e.cmdKey){
-				console.log("cmd " + e.which + " is hit");
-				toggleHit = true;
-			}
-			break;
-		default:
-			if(e.which == toggleKey && e.ctrlKey == false && !e.altKey == false && !e.cmdKey == false){
-				toggleHit = true;	
-				console.log(e.which + " is hit");
-			}
-	}
-	*/
 	if(e.which == toggleKey && e.ctrlKey){
 		console.log("ctrl " + e.which + " is hit");
 		toggleHit = true;
@@ -318,7 +293,7 @@ var toggleListener = function(e){
 		console.log("cmd " + e.which + " is hit");
 		toggleHit = true;
 	}
-	else if(e.which == toggleKey && e.ctrlKey == false && !e.altKey == false && !e.cmdKey == false){
+	else if(e.which == toggleKey && modKey == undefined){
 		toggleHit = true;	
 		console.log(e.which + " is hit");
 	}
@@ -330,13 +305,17 @@ var toggleListener = function(e){
 	
 }
 
+
 //on click, user is prompted to set toggle key
 $(toggleSelector).on('click', function(e){
 	//need to not create note when clicked on wrench
 	console.log("toggle clicked");
 	
 	console.log("waiting for user to hit key");
+		
+	$('#hit-some-key').slideToggle('fast');	//slide animation?
 	$('body').on('keydown', getToggleKey);
+	
 	
 	//returning false to stop propagation and creating a note
 	return false;
@@ -345,6 +324,20 @@ $(toggleSelector).on('click', function(e){
 
 var modKey = null;
 var toggleKey = null;
+var toggleString = null;
+
+var setToggleString = function(){
+	
+	var toggleKeyString = String.fromCharCode(toggleKey);
+	var modKeyString = String.fromCharCode(modKey);	//probably won't work
+	
+	if(modKeyString){
+		toggleString = modKeyString + " + " + toggleKeyString;
+	}
+	else{
+		toggleString = toggleKeyString;
+	}
+}
 
 //logic to set key
 var getToggleKey = function(e){
@@ -370,9 +363,13 @@ var getToggleKey = function(e){
 	}
 	
 	$('body').on('keyup', function(){
+		setToggleString();
+		//console.log(toggleString);
+		$('#hit-some-key').hide('fast');
 		$('body').off('keydown', getToggleKey);
 		return false;
 	});
+	
 	//$(toggleSelector).off('click');
 	saveCurrentSetting();
 	
