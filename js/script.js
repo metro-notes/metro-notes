@@ -171,6 +171,9 @@ overlayObject.on('click', function (e) {
 
 //Clicking on the note should make its children editable (especially now we have the drag handlers)
 overlayObject.on('click', '.metro-notes-note', function () {
+	$('#hit-some-key').hide('fast');
+	$('body').off('keydown', getToggleKey);
+	
     $(this).children('p').prop('contentEditable', 'true').focus();
     insertMode = true;
     return false;
@@ -226,10 +229,17 @@ $('body').on('keydown', toggleListener);
 $('#wrench').click(function(e){
 	console.log("wrench clicked");
 	
-	//setToggleString();
-	//$('toggle-key').text(toggleString);
+	setToggleString();
+	if(toggleString.length){
+		$('toggle-key').text(toggleString);
+	}
+	else{
+		$('toggle-key').text("click me to set toggle key");
+	}
 	
+	$('toggle-key').slideToggle('fast');
 	$(toggleSelector).slideToggle('fast');
+	
 	
 	
 	//TODO
@@ -238,6 +248,139 @@ $('#wrench').click(function(e){
 	return false;
 	//e.stopPropagation();
 });
+
+//waits to check if toggle key is hit to display overlay
+var toggleListener = function(e){
+	//TODO
+	//need to fix single key
+	var toggleHit = false;
+	
+	console.log(e.which + " is hit, waiting for toggle key: " + toggleKey);
+	//console.log("toggleKey: " + toggleKey);
+	//console.log("modKey: " + modKey);
+	
+	if(e.which == toggleKey && e.ctrlKey){
+		console.log("ctrl " + e.which + " is hit");
+		toggleHit = true;
+	}
+	else if(e.which == toggleKey && e.altKey){
+		console.log("alt " + e.which + " is hit");
+		toggleHit = true;
+	}
+	else if(e.which == toggleKey && e.cmdKey){
+		console.log("cmd " + e.which + " is hit");
+		toggleHit = true;
+	}
+	else if(e.which == toggleKey && modKey == undefined){
+		toggleHit = true;	
+		console.log(e.which + " is hit");
+	}
+	
+	if(toggleHit){
+		console.log("hit toggle key");
+		displayOverlay();
+	}
+	
+}
+
+//on click, user is prompted to set toggle key
+$(toggleSelector).on('click', function(e){
+
+	
+	console.log("toggle clicked");
+	
+	console.log("waiting for user to hit key");
+	
+	$('#hit-some-key').slideToggle('fast');	//slide animation?
+	
+	if($('#hit-some-key').css('display') == 'inline'){
+		console.log("execute getToggleKey()");
+		$('body').on('keydown', getToggleKey);
+	}
+	else{ 
+		console.log("kill getToggleKey()");
+		$('body').off('keydown', getToggleKey);
+	}
+	
+	//returning false to stop propagation and creating a note
+	return false;
+	//e.stopPropagation();
+});
+
+var modKey = null;
+var toggleKey = null;
+var toggleString = null;
+
+var setToggleString = function(){
+	
+	var toggleKeyString = String.fromCharCode(toggleKey).toLowerCase();
+	var modKeyString = null;
+	switch(modKey){
+		case 17:
+			modKeyString = "ctrl";
+			break;
+		case 18:
+			modKeyString = "alt";
+			break;
+		case 91:
+			modKeyString = "cmd";
+			break;
+		default:
+			modKeyString = "";
+			break;
+	}
+
+	
+	if(modKeyString.length){
+		toggleString = modKeyString + " + " + toggleKeyString;
+	}
+	else{
+		toggleString = toggleKeyString;
+	}
+}
+
+//logic to set key
+var getToggleKey = function(e){
+	//TODO
+	//add case for shift key
+	if(e.ctrlKey && e.which != 17){
+		console.log("ctrl " + e.which + " is saved");
+		modKey = 17;
+		toggleKey = e.which;
+	}
+	else if(e.altKey && e.which != 18){
+		console.log("alt " + e.which + " is saved");
+		modKey = 18;
+		toggleKey = e.which;
+	}
+	else if(e.metaKey && e.which != 91){
+		console.log("cmd " + e.which + " is saved");
+		modKey = 91;
+		toggleKey = e.which;
+	}
+	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
+		console.log(e.which + " is saved");
+		modKey = undefined;
+		toggleKey = e.which;
+	}
+	
+	$('body').on('keyup', function(){
+		setToggleString();
+		console.log(toggleString);
+		$('toggle-key').text(toggleString);
+		$('toggle-key').show('fast');
+		$('#hit-some-key').hide('fast');
+		
+		$('body').off('keydown', getToggleKey);
+		return false;
+	});
+	
+	//$(toggleSelector).off('click');
+	saveCurrentSetting();
+	
+	return false;
+}
+
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
@@ -268,110 +411,5 @@ var saveCurrentSetting = function(){
 	localStorage['mod-key'] = modKey;
 	localStorage['toggle-key'] = toggleKey;
 		
-	return false;
-}
-
-//waits to check if toggle key is hit to display overlay
-var toggleListener = function(e){
-	//TODO
-	//need to fix single key
-	var toggleHit = false;
-	
-	console.log(e.which + " is hit, waiting for toggle key");
-	console.log("toggleKey: " + toggleKey);
-	console.log("modKey: " + modKey);
-	
-	if(e.which == toggleKey && e.ctrlKey){
-		console.log("ctrl " + e.which + " is hit");
-		toggleHit = true;
-	}
-	else if(e.which == toggleKey && e.altKey){
-		console.log("alt " + e.which + " is hit");
-		toggleHit = true;
-	}
-	else if(e.which == toggleKey && e.cmdKey){
-		console.log("cmd " + e.which + " is hit");
-		toggleHit = true;
-	}
-	else if(e.which == toggleKey && modKey == undefined){
-		toggleHit = true;	
-		console.log(e.which + " is hit");
-	}
-	
-	if(toggleHit){
-		console.log("hit toggle key");
-		displayOverlay();
-	}
-	
-}
-
-
-//on click, user is prompted to set toggle key
-$(toggleSelector).on('click', function(e){
-	//need to not create note when clicked on wrench
-	console.log("toggle clicked");
-	
-	console.log("waiting for user to hit key");
-		
-	$('#hit-some-key').slideToggle('fast');	//slide animation?
-	$('body').on('keydown', getToggleKey);
-	
-	
-	//returning false to stop propagation and creating a note
-	return false;
-	//e.stopPropagation();
-});
-
-var modKey = null;
-var toggleKey = null;
-var toggleString = null;
-
-var setToggleString = function(){
-	
-	var toggleKeyString = String.fromCharCode(toggleKey);
-	var modKeyString = String.fromCharCode(modKey);	//probably won't work
-	
-	if(modKeyString){
-		toggleString = modKeyString + " + " + toggleKeyString;
-	}
-	else{
-		toggleString = toggleKeyString;
-	}
-}
-
-//logic to set key
-var getToggleKey = function(e){
-	if(e.ctrlKey && e.which != 17){
-		console.log("ctrl " + e.which + " is saved");
-		modKey = 17;
-		toggleKey = e.which;
-	}
-	else if(e.altKey && e.which != 18){
-		console.log("alt " + e.which + " is saved");
-		modKey = 18;
-		toggleKey = e.which;
-	}
-	else if(e.metaKey && e.which != 91){
-		console.log("cmd " + e.which + " is saved");
-		modKey = 91;
-		toggleKey = e.which;
-	}
-	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
-		console.log(e.which + " is saved");
-		modKey = undefined;
-		toggleKey = e.which;
-	}
-	
-	$('body').on('keyup', function(){
-		setToggleString();
-		//console.log(toggleString);
-		$('#hit-some-key').hide('fast');
-		$('body').off('keydown', getToggleKey);
-		return false;
-	});
-	
-	//$(toggleSelector).off('click');
-	saveCurrentSetting();
-	
 	return false;
 }
