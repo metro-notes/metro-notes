@@ -2,7 +2,9 @@
 var displayOverlay = function() {
 
 	if($(overlaySelector).css('display') == 'none'){
-		$(toggleSelector).hide();
+		$('#hit-some-key').hide();
+		$('#toggle-key').hide();
+		$('#toggle-key-label').hide();
 		
 		loadSetting();
 	}
@@ -214,20 +216,24 @@ $('.delete').on('click', function() {
 	deleteNote($(this).attr('id').replace('delete-', ''));
 });
 
+
+
+
+
 //TODO
 //need to display what hot key is selected
 $(overlaySelector).append("<div class='wrench' id='wrench'>wrench</div>");
 $(overlaySelector).append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span><span id='hit-some-key'>hit some keys please</span></div>");
 
-$('#hit-some-key').hide();
 
-var toggleSelector = '#toggle-key-label';
-var wrenchSelector = '#wrench';
+$('#hit-some-key').hide();
 
 $('body').on('keydown', toggleListener);
 
-$('#wrench').click(function(e){
+$('#wrench').on('click',function(e){
 	console.log("wrench clicked");
+	//#toggle-key-label has to appear first otherwise showing the other elements does jack
+	$('#toggle-key-label').slideToggle('fast');
 	
 	setToggleString();
 	if(toggleString.length){
@@ -238,7 +244,7 @@ $('#wrench').click(function(e){
 	}
 	
 	$('toggle-key').slideToggle('fast');
-	$(toggleSelector).slideToggle('fast');
+
 	
 	
 	
@@ -248,6 +254,29 @@ $('#wrench').click(function(e){
 	return false;
 	//e.stopPropagation();
 });
+
+//on click, user is prompted to set toggle key
+$('#toggle-key-label').on('click', function(e){
+
+	
+	console.log("toggle clicked, waiting for user to hit key");
+	
+	$('#hit-some-key').slideToggle('fast');	//slide animation?
+	
+	if($('#hit-some-key').css('display') == 'inline'){
+		console.log("execute getToggleKey()");
+		$('body').on('keydown', getToggleKey);
+	}
+	else{ 
+		console.log("kill getToggleKey()");
+		$('body').off('keydown', getToggleKey);
+	}
+	
+	//returning false to stop propagation and creating a note
+	return false;
+	//e.stopPropagation();
+});
+
 
 //waits to check if toggle key is hit to display overlay
 var toggleListener = function(e){
@@ -283,30 +312,6 @@ var toggleListener = function(e){
 	
 }
 
-//on click, user is prompted to set toggle key
-$(toggleSelector).on('click', function(e){
-
-	
-	console.log("toggle clicked");
-	
-	console.log("waiting for user to hit key");
-	
-	$('#hit-some-key').slideToggle('fast');	//slide animation?
-	
-	if($('#hit-some-key').css('display') == 'inline'){
-		console.log("execute getToggleKey()");
-		$('body').on('keydown', getToggleKey);
-	}
-	else{ 
-		console.log("kill getToggleKey()");
-		$('body').off('keydown', getToggleKey);
-	}
-	
-	//returning false to stop propagation and creating a note
-	return false;
-	//e.stopPropagation();
-});
-
 var modKey = null;
 var toggleKey = null;
 var toggleString = null;
@@ -337,6 +342,10 @@ var setToggleString = function(){
 	else{
 		toggleString = toggleKeyString;
 	}
+	
+	toggleString = "meow meow";
+	
+	return false;
 }
 
 //logic to set key
@@ -375,7 +384,7 @@ var getToggleKey = function(e){
 		return false;
 	});
 	
-	//$(toggleSelector).off('click');
+	//$('#toggle-key-label').off('click');
 	saveCurrentSetting();
 	
 	return false;
