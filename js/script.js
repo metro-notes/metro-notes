@@ -1,6 +1,5 @@
 //Function call that toggles the overlay on the screen.
 var displayOverlay = function() {
-
 	if($(overlaySelector).css('display') == 'none'){
 		$('#hit-some-key').hide();
 		$('#toggle-key').hide();
@@ -20,8 +19,6 @@ $(document).ready(function(){
 	loadSetting();
 	$('body').on('keydown', toggleListener);
 });
-
-
 
 var loadSetting = function(){
 	
@@ -121,6 +118,8 @@ var deleteNote = function(index) {
 	console.log("note deleted");
 }
 
+
+}
 //Execute on every page load.
 var overlaySelector = '#metro-notes-overlay';
 
@@ -130,13 +129,6 @@ var overlayObject = $(overlaySelector);
 overlayObject.hide();
 
 var url = document.URL;     //Page URL
-console.log(url);
-if(url.indexOf('www.google.com') != -1) {
-	overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
-	console.log('AUGH');
-	//insert warning about google instant
-}
-
 var lastzindex = 1;         //z-Index tracker to allow notes to properly overlap
 var notes = new Array();    //Array of notes
 var insertMode = false;
@@ -161,6 +153,15 @@ if(url.length) {
 
 //If clicked, insert a new note at the page that was clicked.
 overlayObject.on('click', function (e) {
+	console.log(url);
+	var url = document.URL;     //Page URL
+	if(url.indexOf('#') != -1 && (url.indexOf('www.google.com/search') != -1 || url.indexOf('www.google.com/webhp' != -1))) {
+		if(!$('#instant_issue').length) {
+			overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
+		}
+		return;
+	}
+
     //If in insert mode, first exit insert mode, before inserting a new note.
     if(insertMode){
         insertMode = false;
