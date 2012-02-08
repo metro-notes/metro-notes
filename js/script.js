@@ -91,9 +91,24 @@ var setToggleString = function(){
 
 //logic to set key
 var getToggleKey = function(e){
-	localStorage.setItem('toggleKey', String.fromCharCode(e.which).toLowerCase());
+	if(e.which == '16' || e.which == '17' || e.which == '18' || e.which == '91' || e.which == '92') {
+		$('body').one('keydown', getToggleKey);
+		return;
+	}
+	var text = '';
+	if(e.altKey)
+		text += 'alt+';
+	if(e.ctrlKey)
+		text += 'ctrl+';
+	if(e.metaKey)
+		text += 'meta+';
+	if(e.shiftyKey)
+		text += 'shift+';
+
+	text += String.fromCharCode(e.which).toLowerCase();
+	localStorage.setItem('toggleKey', text);
 	loadCurrentSetting();
-	$('toggle-key').text(String.fromCharCode(e.which).toLowerCase());
+	$('toggle-key').text(text);
 	console.log(e);
 	return false;
 }
@@ -101,12 +116,19 @@ var getToggleKey = function(e){
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
-	localStorage.setItem('toggleKey', '');	
+	localStorage.setItem('toggleKey', '');
 }
 
 //loads at start of every execution except for first
 var loadCurrentSetting = function(){
 	var key = localStorage.getItem('toggleKey');
+	if(!key) {
+		loadDefaultSetting();
+	}
+	key = localStorage.getItem('toggleKey');
+	if(key == '') {
+		return;
+	}
 	$('#toggle-key').text(key);
 	$(document).unbind('keydown');
 	$(document).bind('keydown', key, displayOverlay);
