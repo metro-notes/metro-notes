@@ -7,36 +7,7 @@ var insertMode = false;
 
 //Function call that toggles the overlay on the screen.
 var displayOverlay = function() {
-	if(overlayObject == null) {
-		init();
-	}
-
-	if($(overlaySelector).css('display') == 'none'){
-		$('#hit-some-key').hide();
-		$('#toggle-key').hide();
-		$('#toggle-key-label').hide();
-		
-		loadSetting();
-	}
-	
 	overlayObject.slideToggle('fast');
-}
-
-//desperate. this is probably bad idea
-//need to investigate better way, integrate into displayOverlay()? 
-//has to load settings on every page, otherwise toggle key will not be recognized
-$(document).ready(function(){
-
-	loadSetting();
-	$('body').on('keydown', toggleListener);
-});
-
-var loadSetting = function(){
-	
-	if(localStorage['current'])
-		loadCurrentSetting();
-	else
-		loadDefaultSetting();
 }
 
 //Handles moving the element whenn it is dragged
@@ -115,6 +86,37 @@ var deleteNote = function(index) {
 	console.log("note deleted");
 }
 
+var setToggleString = function(){
+}
+
+//logic to set key
+var getToggleKey = function(e){
+	localStorage.setItem('toggleKey', String.fromCharCode(e.which).toLowerCase());
+	loadCurrentSetting();
+	$('toggle-key').text(String.fromCharCode(e.which).toLowerCase());
+	console.log(e);
+	return false;
+}
+
+
+//loads default settings on first execution
+var loadDefaultSetting = function(){
+	localStorage.setItem('toggleKey', '');	
+}
+
+//loads at start of every execution except for first
+var loadCurrentSetting = function(){
+	var key = localStorage.getItem('toggleKey');
+	$('#toggle-key').text(key);
+	$(document).unbind('keydown');
+	$(document).bind('keydown', key, displayOverlay);
+}
+
+//saves current setting into localStorage
+var saveCurrentSetting = function(toggleKey){
+	localStorage.setItem('toggleKey', toggleKey);
+}
+
 //Execute on every page load.
 var init = function() {
 	//Insert the overlay object into the page then hide it.
@@ -124,10 +126,11 @@ var init = function() {
 
 	overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
 	overlayObject.append("<div class='wrench' id='wrench'>wrench</div>");
-	overlayObject.append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span><span id='hit-some-key'>hit some keys please</span></div>");
+	overlayObject.append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span></div>");
 
 	$('#instant_issue').hide();
-	$('#hit-some-key').hide();
+		
+	loadCurrentSetting();
 
 	//If there is a URL, get the list of notes from the localStorage
 	if(url.length) {
@@ -168,9 +171,6 @@ var init = function() {
 
 	//Clicking on the note should make its children editable (especially now we have the drag handlers)
 	overlayObject.on('click', '.metro-notes-note', function () {
-		$('#hit-some-key').hide('fast');
-		$('body').off('keydown', getToggleKey);
-
 		$(this).children('p').prop('contentEditable', 'true').focus();
 		insertMode = true;
 		return false;
@@ -204,209 +204,26 @@ var init = function() {
 		return false;
 	});
 
-
 	//Delete notes when delete is clicked.
 	$('.delete').on('click', function() {
 		console.log("delete box clicked");
 		deleteNote($(this).attr('id').replace('delete-', ''));
 	});
-}
 
-
-//TODO
-//need to display what hot key is selected
-
-$('body').on('keydown', toggleListener);
-
-$('#wrench').on('click',function(e){
-	console.log("wrench clicked");
-	//#toggle-key-label has to appear first otherwise showing the other elements does jack
-	$('#toggle-key-label').slideToggle('fast');
-	
-	setToggleString();
-	if(toggleString.length){
-		$('toggle-key').text(toggleString);
-	}
-	else{
-		$('toggle-key').text("click me to set toggle key");
-	}
-	
-	$('toggle-key').slideToggle('fast');
-
-	
-	
-	
-	//TODO
-	//if wrench is clicked again while toggle listener is active, disable toggle listener
-	//how to check if event is running
-	return false;
-	//e.stopPropagation();
-});
-
-//on click, user is prompted to set toggle key
-$('#toggle-key-label').on('click', function(e){
-
-	
-	console.log("toggle clicked, waiting for user to hit key");
-	
-	$('#hit-some-key').slideToggle('fast');	//slide animation?
-	
-	if($('#hit-some-key').css('display') == 'inline'){
-		console.log("execute getToggleKey()");
-		$('body').on('keydown', getToggleKey);
-	}
-	else{ 
-		console.log("kill getToggleKey()");
-		$('body').off('keydown', getToggleKey);
-	}
-	
-	//returning false to stop propagation and creating a note
-	return false;
-	//e.stopPropagation();
-});
-
-
-//waits to check if toggle key is hit to display overlay
-var toggleListener = function(e){
-	//TODO
-	//need to fix single key
-	var toggleHit = false;
-	
-	console.log(e.which + " is hit, waiting for toggle key: " + toggleKey);
-	//console.log("toggleKey: " + toggleKey);
-	//console.log("modKey: " + modKey);
-	
-	if(e.which == toggleKey && e.ctrlKey){
-		console.log("ctrl " + e.which + " is hit");
-		toggleHit = true;
-	}
-	else if(e.which == toggleKey && e.altKey){
-		console.log("alt " + e.which + " is hit");
-		toggleHit = true;
-	}
-	else if(e.which == toggleKey && e.cmdKey){
-		console.log("cmd " + e.which + " is hit");
-		toggleHit = true;
-	}
-	else if(e.which == toggleKey && modKey == undefined){
-		toggleHit = true;	
-		console.log(e.which + " is hit");
-	}
-	
-	if(toggleHit){
-		console.log("hit toggle key");
-		displayOverlay();
-	}
-	
-}
-
-var modKey = null;
-var toggleKey = null;
-var toggleString = null;
-
-var setToggleString = function(){
-	
-	var toggleKeyString = String.fromCharCode(toggleKey).toLowerCase();
-	var modKeyString = null;
-	switch(modKey){
-		case 17:
-			modKeyString = "ctrl";
-			break;
-		case 18:
-			modKeyString = "alt";
-			break;
-		case 91:
-			modKeyString = "cmd";
-			break;
-		default:
-			modKeyString = "";
-			break;
-	}
-
-	
-	if(modKeyString.length){
-		toggleString = modKeyString + " + " + toggleKeyString;
-	}
-	else{
-		toggleString = toggleKeyString;
-	}
-	
-	toggleString = "meow meow";
-	
-	return false;
-}
-
-//logic to set key
-var getToggleKey = function(e){
-	//TODO
-	//add case for shift key
-	if(e.ctrlKey && e.which != 17){
-		console.log("ctrl " + e.which + " is saved");
-		modKey = 17;
-		toggleKey = e.which;
-	}
-	else if(e.altKey && e.which != 18){
-		console.log("alt " + e.which + " is saved");
-		modKey = 18;
-		toggleKey = e.which;
-	}
-	else if(e.metaKey && e.which != 91){
-		console.log("cmd " + e.which + " is saved");
-		modKey = 91;
-		toggleKey = e.which;
-	}
-	else if(!e.ctrlKey && !e.altKey && !e.metaKey ){
-		console.log(e.which + " is saved");
-		modKey = undefined;
-		toggleKey = e.which;
-	}
-	
-	$('body').on('keyup', function(){
-		setToggleString();
-		console.log(toggleString);
-		$('toggle-key').text(toggleString);
-		$('toggle-key').show('fast');
-		$('#hit-some-key').hide('fast');
-		
-		$('body').off('keydown', getToggleKey);
+	$('#wrench').on('click',function(e){
+		console.log("wrench clicked");
+		$('#toggle-key-label').slideToggle('fast');
+		$('toggle-key').slideToggle('fast');
 		return false;
 	});
-	
-	//$('#toggle-key-label').off('click');
-	saveCurrentSetting();
-	
-	return false;
+
+	//on click, user is prompted to set toggle key
+	$('#toggle-key-label').on('click', function(e){
+		console.log("toggle clicked, waiting for user to hit key");
+		$('#toggle-key').text('new hotkey...');
+		$('body').one('keydown', getToggleKey);
+		return false;
+	});
 }
 
-
-//loads default settings on first execution
-var loadDefaultSetting = function(){
-	console.log("loading default settings");
-	
-	localStorage['toggle-key'] = undefined;
-	localStorage['mod-key'] = undefined;
-	toggleKey = localStorage['toggle-key'];
-	modKey = localStorage['mod-key'];
-	
-	return false;
-}
-
-//loads at start of every execution except for first
-var loadCurrentSetting = function(){
-	console.log("loading current settings");
-	if(localStorage['mod-key'])
-		modKey = localStorage['mod-key'];
-	
-	toggleKey = localStorage['toggle-key'];
-}
-
-//saves current setting into localStorage
-var saveCurrentSetting = function(){
-	console.log("saving current settings");
-	//loads default unless settings have been changed
-	localStorage['current'] = true;
-	localStorage['mod-key'] = modKey;
-	localStorage['toggle-key'] = toggleKey;
-		
-	return false;
-}
+init();
