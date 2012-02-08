@@ -118,8 +118,6 @@ var deleteNote = function(index) {
 	console.log("note deleted");
 }
 
-
-}
 //Execute on every page load.
 var overlaySelector = '#metro-notes-overlay';
 
@@ -127,6 +125,9 @@ var overlaySelector = '#metro-notes-overlay';
 $('body').append('<div id="metro-notes-overlay"></div>');
 var overlayObject = $(overlaySelector);
 overlayObject.hide();
+
+overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
+$('#instant_issue').hide();
 
 var url = document.URL;     //Page URL
 var lastzindex = 1;         //z-Index tracker to allow notes to properly overlap
@@ -156,9 +157,7 @@ overlayObject.on('click', function (e) {
 	console.log(url);
 	var url = document.URL;     //Page URL
 	if(url.indexOf('#') != -1 && (url.indexOf('www.google.com/search') != -1 || url.indexOf('www.google.com/webhp' != -1))) {
-		if(!$('#instant_issue').length) {
-			overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
-		}
+			$('#instant_issue').show();
 		return;
 	}
 
