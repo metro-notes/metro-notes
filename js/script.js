@@ -1,5 +1,16 @@
+var overlaySelector = '#metro-notes-overlay';
+var overlayObject = null;
+var url = document.URL;     //Page URL
+var lastzindex = 1;         //z-Index tracker to allow notes to properly overlap
+var notes = new Array();    //Array of notes
+var insertMode = false;
+
 //Function call that toggles the overlay on the screen.
 var displayOverlay = function() {
+	if(overlayObject == null) {
+		init();
+	}
+
 	if($(overlaySelector).css('display') == 'none'){
 		$('#hit-some-key').hide();
 		$('#toggle-key').hide();
@@ -81,20 +92,6 @@ var insertNote = function(noteObj, index) {
     return note;
 }
 
-//this function is never used
-//Create a brand new note by:
-//  Adding it to the DOM
-//  Putting it in the live note Array
-//  Reserving an id for it and
-//  putting it in localStorage
-var createNote = function(noteObj) {
-    insertNote(noteObj, notes.length);
-    notes.push(noteObj);
-    localStorage.setItem(url, JSON.stringify(notes));
-
-	
-}
-
 //Update an existing note based on its index to match the given noteObj
 var updateNote = function(index, noteObj) {
     $('#metro-notes-' + index).text(noteObj.note);
@@ -119,114 +116,105 @@ var deleteNote = function(index) {
 }
 
 //Execute on every page load.
-var overlaySelector = '#metro-notes-overlay';
+var init = function() {
+	//Insert the overlay object into the page then hide it.
+	$('body').append('<div id="metro-notes-overlay"></div>');
+	overlayObject = $(overlaySelector);
+	overlayObject.hide();
 
-//Insert the overlay object into the page then hide it.
-$('body').append('<div id="metro-notes-overlay"></div>');
-var overlayObject = $(overlaySelector);
-overlayObject.hide();
+	overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
+	overlayObject.append("<div class='wrench' id='wrench'>wrench</div>");
+	overlayObject.append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span><span id='hit-some-key'>hit some keys please</span></div>");
 
-overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
-$('#instant_issue').hide();
+	$('#instant_issue').hide();
+	$('#hit-some-key').hide();
 
-var url = document.URL;     //Page URL
-var lastzindex = 1;         //z-Index tracker to allow notes to properly overlap
-var notes = new Array();    //Array of notes
-var insertMode = false;
-
-//If there is a URL, get the list of notes from the localStorage
-if(url.length) {
-    var arr = localStorage.getItem(url);
-    //If notes exist, for each one, insert it into the page.
-    if(arr != null) {
-        notes = JSON.parse(arr);
-		note_arr = [];
-        for (var i in notes) {
-            if(notes[i] !== '') {
-				note_arr.push(notes[i]);
-				insertNote(note_arr[note_arr.length-1], note_arr.length-1);
-            }
+	//If there is a URL, get the list of notes from the localStorage
+	if(url.length) {
+		var arr = localStorage.getItem(url);
+		//If notes exist, for each one, insert it into the page.
+		if(arr != null) {
+			notes = JSON.parse(arr);
+			note_arr = [];
+			for (var i in notes) {
+				if(notes[i] !== '') {
+					note_arr.push(notes[i]);
+					insertNote(note_arr[note_arr.length-1], note_arr.length-1);
+				}
+			}
+			notes = note_arr;
+			localStorage.setItem(url, JSON.stringify(notes));
 		}
-		notes = note_arr;
-		localStorage.setItem(url, JSON.stringify(notes));
-    }
-}
-
-//If clicked, insert a new note at the page that was clicked.
-overlayObject.on('click', function (e) {
-	console.log(url);
-	var url = document.URL;     //Page URL
-	if(url.indexOf('#') != -1 && (url.indexOf('www.google.com/search') != -1 || url.indexOf('www.google.com/webhp' != -1))) {
-			$('#instant_issue').show();
-		return;
 	}
 
-    //If in insert mode, first exit insert mode, before inserting a new note.
-    if(insertMode){
-        insertMode = false;
-        return false;
-    }
-    noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '150px', 'height': '125px'};
-    insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
-    insertMode = true;
-});
+	//If clicked, insert a new note at the page that was clicked.
+	overlayObject.on('click', function (e) {
+		console.log(url);
+		var url = document.URL;     //Page URL
+		if(url.indexOf('#') != -1 && (url.indexOf('www.google.com/search') != -1 || url.indexOf('www.google.com/webhp' != -1))) {
+			$('#instant_issue').show();
+			return;
+		}
 
-//Clicking on the note should make its children editable (especially now we have the drag handlers)
-overlayObject.on('click', '.metro-notes-note', function () {
-	$('#hit-some-key').hide('fast');
-	$('body').off('keydown', getToggleKey);
-	
-    $(this).children('p').prop('contentEditable', 'true').focus();
-    insertMode = true;
-    return false;
-});
+		//If in insert mode, first exit insert mode, before inserting a new note.
+		if(insertMode){
+			insertMode = false;
+			return false;
+		}
+		noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '150px', 'height': '125px'};
+		insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
+		insertMode = true;
+	});
 
-//On mouseover, bring the note to the front
-overlayObject.on('mouseover', '.metro-notes-note', function () {
-    $(this).css('zIndex', lastzindex++);
-});
+	//Clicking on the note should make its children editable (especially now we have the drag handlers)
+	overlayObject.on('click', '.metro-notes-note', function () {
+		$('#hit-some-key').hide('fast');
+		$('body').off('keydown', getToggleKey);
 
-//When the note loses focus, and it has data, save it.
-overlayObject.on('blur', '.metro-notes-note > p', function () {
-    var note = $(this).text();
-    //If the note is empty, delete it.
-    if($.trim(note) == '') {
-		try {
-			deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
-		} catch (e) { console.log(e); }
-    } else {
-        var tar = $(this).parent('.metro-notes-note');
-        noteObj = {
-            'note': tar.text(),
-            'top': tar.css('top'),
-            'left': tar.css('left'),
-            'width': tar.css('width'),
-            'height': tar.css('height')
-        };
-        updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
-        $(this).prop('contentEditable', 'false');
-    }
-    return false;
-});
+		$(this).children('p').prop('contentEditable', 'true').focus();
+		insertMode = true;
+		return false;
+	});
+
+	//On mouseover, bring the note to the front
+	overlayObject.on('mouseover', '.metro-notes-note', function () {
+		$(this).css('zIndex', lastzindex++);
+	});
+
+	//When the note loses focus, and it has data, save it.
+	overlayObject.on('blur', '.metro-notes-note > p', function () {
+		var note = $(this).text();
+		//If the note is empty, delete it.
+		if($.trim(note) == '') {
+			try {
+				deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
+			} catch (e) { console.log(e); }
+		} else {
+			var tar = $(this).parent('.metro-notes-note');
+			noteObj = {
+				'note': tar.text(),
+		'top': tar.css('top'),
+		'left': tar.css('left'),
+		'width': tar.css('width'),
+		'height': tar.css('height')
+			};
+			updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
+			$(this).prop('contentEditable', 'false');
+		}
+		return false;
+	});
 
 
-//Delete notes when delete is clicked.
-$('.delete').on('click', function() {
-	console.log("delete box clicked");
-	deleteNote($(this).attr('id').replace('delete-', ''));
-});
-
-
-
+	//Delete notes when delete is clicked.
+	$('.delete').on('click', function() {
+		console.log("delete box clicked");
+		deleteNote($(this).attr('id').replace('delete-', ''));
+	});
+}
 
 
 //TODO
 //need to display what hot key is selected
-$(overlaySelector).append("<div class='wrench' id='wrench'>wrench</div>");
-$(overlaySelector).append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span><span id='hit-some-key'>hit some keys please</span></div>");
-
-
-$('#hit-some-key').hide();
 
 $('body').on('keydown', toggleListener);
 
