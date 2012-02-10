@@ -151,6 +151,7 @@ var init = function() {
 	overlayObject.append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span></div>");
 
 	$('#instant_issue').hide();
+	$('#toggle-key-label').hide();
 		
 	loadCurrentSetting();
 
@@ -235,15 +236,22 @@ var init = function() {
 	$('#wrench').on('click',function(e){
 		console.log("wrench clicked");
 		$('#toggle-key-label').slideToggle('fast');
-		$('toggle-key').slideToggle('fast');
 		return false;
 	});
 
 	//on click, user is prompted to set toggle key
+	//If the user clicks again, nothing is changed
 	$('#toggle-key-label').on('click', function(e){
-		console.log("toggle clicked, waiting for user to hit key");
-		$('#toggle-key').text('new hotkey...');
-		$('body').one('keydown', getToggleKey);
+		if($('#toggle-key').data('click-count') == true) {
+			$('#toggle-key').data('click-count', false);
+			$('#toggle-key').text(localStorage.getItem('toggleKey'));
+			$('body').off('keydown', getToggleKey);
+		} else {
+			console.log("toggle clicked, waiting for user to hit key");
+			$('#toggle-key').text('new hotkey...');
+			$('#toggle-key').data('click-count', true);
+			$('body').one('keydown', getToggleKey);
+		}
 		return false;
 	});
 }
