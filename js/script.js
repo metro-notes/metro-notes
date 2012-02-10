@@ -8,28 +8,6 @@ var insertMode = false;
 //Function call that toggles the overlay on the screen.
 var displayOverlay = function() {
 	overlayObject.slideToggle('fast');
-}
-
-//Handles moving the element whenn it is dragged
-var drag = function(ev, dd){
-    $(this).css({
-        top: dd.offsetY,
-        left: dd.offsetX
-    });
-};
-
-//Function called when an element is dropped after dragging.
-//Updates the elements new x, y location in localStorage
-var dragend = function() {
-    var tar = $(this);
-    noteObj = {
-        'note': tar.text(),
-        'top': tar.css('top'),
-        'left': tar.css('left'),
-        'width': tar.css('width'),
-        'height': tar.css('height')
-    };
-    updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
 };
 
 //Inserts a new note based on the given noteObj and index.
@@ -47,10 +25,28 @@ var insertNote = function(noteObj, index) {
     });
     
     //Assign drag and dragend event handlers
-    note.drag(drag, {
+	note.drag(function(ev, dd){
+		$(this).css({
+			top: dd.offsetY,
+			left: dd.offsetX
+		});
+	}, {
         'handle': '.handle'
     });
-    note.on('dragend', dragend);
+
+	//Function called when an element is dropped after dragging.
+	//Updates the elements new x, y location in localStorage
+	note.on('dragend', function() {
+		var tar = $(this);
+		noteObj = {
+			'note': tar.text(),
+		'top': tar.css('top'),
+		'left': tar.css('left'),
+		'width': tar.css('width'),
+		'height': tar.css('height')
+		};
+		updateNote(tar.attr('id').replace('metro-notes-note-', ''), noteObj);
+	});
 	
 	//Delete notes when delte is clicked.
 	note.on('click', '.delete', function() {
@@ -61,7 +57,7 @@ var insertNote = function(noteObj, index) {
     overlayObject.append(note);
 	console.log("note created");
     return note;
-}
+};
 
 //Update an existing note based on its index to match the given noteObj
 var updateNote = function(index, noteObj) {
@@ -74,7 +70,7 @@ var updateNote = function(index, noteObj) {
     });
     notes[index] = noteObj;
     localStorage.setItem(url, JSON.stringify(notes));
-}
+};
 
 //Delete the note specified by the given index
 //Removes it from the DOM and removes it from the localStorage
@@ -84,16 +80,13 @@ var deleteNote = function(index) {
     localStorage.setItem(url, JSON.stringify(notes));
 	
 	console.log("note deleted");
-}
-
-var setToggleString = function(){
-}
+};
 
 //logic to set key
 var getToggleKey = function(e){
-	if(e.which == '16' || e.which == '17' || e.which == '18' || e.which == '91' || e.which == '92') {
+	if(e.which === '16' || e.which === '17' || e.which === '18' || e.which === '91' || e.which === '92') {
 		$('body').one('keydown', getToggleKey);
-		return;
+		return false;
 	}
 	var text = '';
 	if(e.altKey)
@@ -107,17 +100,17 @@ var getToggleKey = function(e){
 
 	text += String.fromCharCode(e.which).toLowerCase();
 	localStorage.setItem('toggleKey', text);
-	loadCurrentSetting();
-	$('toggle-key').text(text);
 	console.log(e);
+	$('toggle-key').text(text);
+	loadCurrentSetting();
 	return false;
-}
+};
 
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
 	localStorage.setItem('toggleKey', '');
-}
+};
 
 //loads at start of every execution except for first
 var loadCurrentSetting = function(){
@@ -126,18 +119,13 @@ var loadCurrentSetting = function(){
 		loadDefaultSetting();
 	}
 	key = localStorage.getItem('toggleKey');
-	if(key == '') {
+	if(key === '') {
 		return;
 	}
 	$('#toggle-key').text(key);
 	$(document).unbind('keydown');
 	$(document).bind('keydown', key, displayOverlay);
-}
-
-//saves current setting into localStorage
-var saveCurrentSetting = function(toggleKey){
-	localStorage.setItem('toggleKey', toggleKey);
-}
+};
 
 //Execute on every page load.
 var init = function() {
@@ -159,7 +147,7 @@ var init = function() {
 	if(url.length) {
 		var arr = localStorage.getItem(url);
 		//If notes exist, for each one, insert it into the page.
-		if(arr != null) {
+		if(arr !== null) {
 			notes = JSON.parse(arr);
 			note_arr = [];
 			for (var i in notes) {
@@ -177,9 +165,9 @@ var init = function() {
 	overlayObject.on('click', function (e) {
 		console.log(url);
 		var url = document.URL;     //Page URL
-		if(url.indexOf('#') != -1 && (url.indexOf('www.google.com/search') != -1 || url.indexOf('www.google.com/webhp' != -1))) {
+		if(url.indexOf('#') !== -1 && (url.indexOf('www.google.com/search') !== -1 || url.indexOf('www.google.com/webhp' !== -1))) {
 			$('#instant_issue').show();
-			return;
+			return false;
 		}
 
 		//If in insert mode, first exit insert mode, before inserting a new note.
@@ -190,6 +178,7 @@ var init = function() {
 		noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '150px', 'height': '125px'};
 		insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
 		insertMode = true;
+		return false;
 	});
 
 	//Clicking on the note should make its children editable (especially now we have the drag handlers)
@@ -201,14 +190,15 @@ var init = function() {
 
 	//On mouseover, bring the note to the front
 	overlayObject.on('mouseover', '.metro-notes-note', function () {
-		$(this).css('zIndex', lastzindex++);
+		$(this).css('zIndex', lastzindex);
+		lastzindex++;
 	});
 
 	//When the note loses focus, and it has data, save it.
 	overlayObject.on('blur', '.metro-notes-note > p', function () {
 		var note = $(this).text();
 		//If the note is empty, delete it.
-		if($.trim(note) == '') {
+		if($.trim(note) === '') {
 			try {
 				deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
 			} catch (e) { console.log(e); }
@@ -242,7 +232,7 @@ var init = function() {
 	//on click, user is prompted to set toggle key
 	//If the user clicks again, nothing is changed
 	$('#toggle-key-label').on('click', function(e){
-		if($('#toggle-key').data('click-count') == true) {
+		if($('#toggle-key').data('click-count') === true) {
 			$('#toggle-key').data('click-count', false);
 			$('#toggle-key').text(localStorage.getItem('toggleKey'));
 			$('body').off('keydown', getToggleKey);
@@ -254,6 +244,6 @@ var init = function() {
 		}
 		return false;
 	});
-}
+};
 
 init();
