@@ -223,18 +223,15 @@ $('#wrench').on('click',function(e){
 	//#toggle-key-label has to appear first otherwise showing the other elements does jack
 	$('#toggle-key-label').slideToggle('fast');
 	
+	$('#toggle-key').show('fast');
+	
 	setToggleString();
 	if(toggleString.length){
-		$('toggle-key').text(toggleString);
+		$('#toggle-key').text(toggleString);
 	}
 	else{
-		$('toggle-key').text("click me to set toggle key");
+		$('#toggle-key').text("click me to set toggle key");
 	}
-	
-	$('toggle-key').slideToggle('fast');
-
-	
-	
 	
 	//TODO
 	//if wrench is clicked again while toggle listener is active, disable toggle listener
@@ -246,9 +243,10 @@ $('#wrench').on('click',function(e){
 //on click, user is prompted to set toggle key
 $('#toggle-key-label').on('click', function(e){
 
-	
+	//TODO
+	//need to fix the jumping behavior with CSS positioning
 	console.log("toggle clicked, waiting for user to hit key");
-	
+	$('#toggle-key').slideToggle('fast');
 	$('#hit-some-key').slideToggle('fast');	//slide animation?
 	
 	if($('#hit-some-key').css('display') == 'inline'){
@@ -302,7 +300,7 @@ var toggleListener = function(e){
 
 var modKey = null;
 var toggleKey = null;
-var toggleString = null;
+var toggleString = "";
 
 var setToggleString = function(){
 	
@@ -322,8 +320,6 @@ var setToggleString = function(){
 			modKeyString = "";
 			break;
 	}
-
-	
 	if(modKeyString.length){
 		toggleString = modKeyString + " + " + toggleKeyString;
 	}
@@ -331,7 +327,7 @@ var setToggleString = function(){
 		toggleString = toggleKeyString;
 	}
 	
-	toggleString = "meow meow";
+	toggleString = "";
 	
 	return false;
 }
