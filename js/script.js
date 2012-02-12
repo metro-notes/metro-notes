@@ -15,6 +15,7 @@ var displayOverlay = function() {
 		$('#hit-some-key').hide();
 		$('#toggle-key').hide();
 		$('#toggle-key-label').hide();
+		$('#reset').hide();
 		
 		loadSetting();
 	}
@@ -125,6 +126,7 @@ var init = function() {
 	overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
 	overlayObject.append("<div class='wrench' id='wrench'>wrench</div>");
 	overlayObject.append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span><span id='hit-some-key'>hit some keys please</span></div>");
+	//overlayObject.append("<div class='wrench' id='reset'>reset</div>");
 
 	$('#instant_issue').hide();
 	$('#hit-some-key').hide();
@@ -406,3 +408,8 @@ var saveCurrentSetting = function(){
 		
 	return false;
 }
+/*
+$('#reset').on('click', function(){
+	loadDefaultSetting();
+})
+*/
