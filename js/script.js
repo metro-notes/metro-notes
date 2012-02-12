@@ -15,12 +15,13 @@ var displayOverlay = function() {
 		$('#hit-some-key').hide();
 		$('#toggle-key').hide();
 		$('#toggle-key-label').hide();
-		$('#reset').hide();
+		//$('#reset').hide();
 		
 		loadSetting();
 	}
 	
 	overlayObject.slideToggle('fast');
+	
 }
 
 //desperate. this is probably bad idea
@@ -152,7 +153,7 @@ var init = function() {
 	//If clicked, insert a new note at the page that was clicked.
 	overlayObject.on('click', function (e) {
 		console.log(url);
-		var url = document.URL;     //Page URL
+		//var url = document.URL;     //Page URL *unnecessary since there is a global one declared already*
 		if(url.indexOf('#') != -1 && (url.indexOf('www.google.com/search') != -1 || url.indexOf('www.google.com/webhp' != -1))) {
 			$('#instant_issue').show();
 			return;
@@ -410,6 +411,7 @@ var saveCurrentSetting = function(){
 }
 /*
 $('#reset').on('click', function(){
+	current = false; 
 	loadDefaultSetting();
-})
+});
 */
