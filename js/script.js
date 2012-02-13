@@ -8,6 +8,13 @@ var insertMode = false;
 //Function call that toggles the overlay on the screen.
 var displayOverlay = function() {
 	overlayObject.slideToggle('fast');
+	
+	//if wrench items are still displayed when overlayObject hides, hide the wrench items so when the user pulls it down again, only "wrench" shows
+	if($('#toggle-key-label').css('display') == 'block'){
+		$('#reset').hide();
+		$('#toggle-key').hide();
+		$('#toggle-key-label').hide();
+	}
 };
 
 //Inserts a new note based on the given noteObj and index.
@@ -98,6 +105,7 @@ var getToggleKey = function(e){
 	if(e.shiftyKey)
 		text += 'shift+';
 
+	//need alternative method to this, '.' shows up as '3/4' symbol
 	text += String.fromCharCode(e.which).toLowerCase();
 	localStorage.setItem('toggleKey', text);
 	console.log(e);
@@ -109,11 +117,17 @@ var getToggleKey = function(e){
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
+	console.log("load default settings");
 	localStorage.setItem('toggleKey', '');
+	$('#toggle-key').text('');
+	
+	//not working
+	$(document).unbind('keydown', key, displayOverlay);
 };
 
 //loads at start of every execution except for first
 var loadCurrentSetting = function(){
+	console.log("load current settings");
 	var key = localStorage.getItem('toggleKey');
 	if(!key) {
 		loadDefaultSetting();
@@ -137,9 +151,11 @@ var init = function() {
 	overlayObject.append('<div id="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
 	overlayObject.append("<div class='wrench' id='wrench'>wrench</div>");
 	overlayObject.append("<div class='wrench' id='toggle-key-label'>toggle key<span id='toggle-key'></span></div>");
+	overlayObject.append("<div class='wrench' id='reset'>reset</div>");
 
 	$('#instant_issue').hide();
 	$('#toggle-key-label').hide();
+	$('#reset').hide();
 		
 	loadCurrentSetting();
 
@@ -226,7 +242,16 @@ var init = function() {
 
 	$('#wrench').on('click',function(e){
 		console.log("wrench clicked");
+		$('#reset').slideToggle('fast');
 		$('#toggle-key-label').slideToggle('fast');
+		$('#toggle-key').slideToggle('fast');
+		return false;
+	});
+	
+	$('#reset').on('click', function(){
+		console.log("resetting...");
+		loadDefaultSetting();
+		
 		return false;
 	});
 
