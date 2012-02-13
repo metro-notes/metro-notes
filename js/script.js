@@ -164,8 +164,9 @@ var init = function() {
 	//If clicked, insert a new note at the page that was clicked.
 	overlayObject.on('click', function (e) {
 		console.log(url);
-		var url = document.URL;     //Page URL #Necessary cos Ajax
-		if(url.indexOf('#') !== -1 && (url.indexOf('www.google.com/search') !== -1 || url.indexOf('www.google.com/webhp' !== -1))) {
+		var ajax_url = document.URL;     //Page URL #Necessary cos Ajax
+
+		if(ajax_url.indexOf('#') !== -1 && (ajax_url.indexOf('www.google.com/search') !== -1 || ajax_url.indexOf('www.google.com/webhp' !== -1))) {
 			$('#instant_issue').show();
 			return false;
 		}
