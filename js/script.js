@@ -12,7 +12,6 @@ var displayOverlay = function() {
 	//if wrench items are still displayed when overlayObject hides, hide the wrench items so when the user pulls it down again, only "wrench" shows
 	if($('#toggle-key-label').css('display') == 'block'){
 		$('#reset').hide();
-		$('#toggle-key').hide();
 		$('#toggle-key-label').hide();
 	}
 };
@@ -244,7 +243,6 @@ var init = function() {
 		console.log("wrench clicked");
 		$('#reset').slideToggle('fast');
 		$('#toggle-key-label').slideToggle('fast');
-		$('#toggle-key').slideToggle('fast');
 		return false;
 	});
 	
