@@ -122,7 +122,7 @@ var loadDefaultSetting = function(){
 	$('#toggle-key').text('');
 	
 	//not working
-	$(document).unbind('keydown', key, displayOverlay);
+	$(document).unbind('keydown');
 };
 
 //loads at start of every execution except for first
