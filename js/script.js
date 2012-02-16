@@ -90,6 +90,7 @@ var deleteNote = function(index) {
 
 //logic to set key
  var getToggleKey = function(e){
+		 console.log(e);
 	 if(e.which === 16 || e.which === 17 || e.which === 18 || e.which === 91 || e.which === 92) {
 		 $('body').one('keydown', getToggleKey);
 		 return false;
@@ -101,7 +102,7 @@ var deleteNote = function(index) {
 		 text += 'ctrl+';
 	 if(e.metaKey)
 		 text += 'meta+';
-	 if(e.shiftyKey)
+	 if(e.shiftKey)
 		 text += 'shift+';
 
 	 //need alternative method to this, '.' shows up as '3/4' symbol
