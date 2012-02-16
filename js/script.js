@@ -89,30 +89,28 @@ var deleteNote = function(index) {
 };
 
 //logic to set key
-var getToggleKey = function(e){
-	if(e.which === 16 || e.which === 17 || e.which === 18 || e.which === 91 || e.which === 92) {
-		$('body').one('keydown', getToggleKey);
-		return false;
-	}
-	var text = '';
-	if(e.altKey)
-		text += 'alt+';
-	if(e.ctrlKey)
-		text += 'ctrl+';
-	if(e.metaKey)
-		text += 'meta+';
-	if(e.shiftyKey)
-		text += 'shift+';
+ var getToggleKey = function(e){
+	 if(e.which === 16 || e.which === 17 || e.which === 18 || e.which === 91 || e.which === 92) {
+		 $('body').one('keydown', getToggleKey);
+		 return false;
+	 }
+	 var text = '';
+	 if(e.altKey)
+		 text += 'alt+';
+	 if(e.ctrlKey)
+		 text += 'ctrl+';
+	 if(e.metaKey)
+		 text += 'meta+';
+	 if(e.shiftyKey)
+		 text += 'shift+';
 
-	//need alternative method to this, '.' shows up as '3/4' symbol
-	text += String.fromCharCode(e.which).toLowerCase();
-	localStorage.setItem('toggleKey', text);
-	console.log(e);
-	$('toggle-key').text(text);
-	loadCurrentSetting();
-	return false;
-};
-
+	 //need alternative method to this, '.' shows up as '3/4' symbol
+	 text += getCharDesc(e.which).toLowerCase();
+	 localStorage.setItem('toggleKey', text);
+	 $('#toggle-key').text(text);
+	 loadCurrentSetting();
+	 return false;
+ }
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
@@ -139,6 +137,22 @@ var loadCurrentSetting = function(){
 	$(document).unbind('keydown');
 	$(document).bind('keydown', key, displayOverlay);
 };
+
+function getCharDesc(char_code)
+{
+	var specialKeys = {
+		8: "backspace", 9: "tab", 13: "return", 16: "shift", 17: "ctrl", 18: "alt", 19: "pause",
+		20: "capslock", 27: "esc", 32: "space", 33: "pageup", 34: "pagedown", 35: "end", 36: "home",
+		37: "left", 38: "up", 39: "right", 40: "down", 45: "insert", 46: "del", 
+		96: "0", 97: "1", 98: "2", 99: "3", 100: "4", 101: "5", 102: "6", 103: "7",
+		104: "8", 105: "9", 106: "*", 107: "+", 109: "-", 110: ".", 111 : "/", 
+		112: "f1", 113: "f2", 114: "f3", 115: "f4", 116: "f5", 117: "f6", 118: "f7", 119: "f8", 
+		120: "f9", 121: "f10", 122: "f11", 123: "f12", 144: "numlock", 145: "scroll", 188: ",", 190: ".",
+		191: "/", 224: "meta"
+	};
+	console.log(char_code);
+	return specialKeys[char_code] ? specialKeys[char_code] : String.fromCharCode(char_code);
+}
 
 //Execute on every page load.
 var init = function() {
