@@ -90,7 +90,7 @@ var deleteNote = function(index) {
 
 //logic to set key
 var getToggleKey = function(e){
-	if(e.which === '16' || e.which === '17' || e.which === '18' || e.which === '91' || e.which === '92') {
+	if(e.which === 16 || e.which === 17 || e.which === 18 || e.which === 91 || e.which === 92) {
 		$('body').one('keydown', getToggleKey);
 		return false;
 	}
