@@ -56,12 +56,12 @@ var insertNote = function(noteObj, index) {
 	
 	//Delete notes when delte is clicked.
 	note.on('click', '.delete', function() {
-		console.log('delete');
+		//console.log('delete');
 		deleteNote($(this).attr('id').replace('delete-', ''));
 	});
 
     overlayObject.append(note);
-	console.log("note created");
+	//console.log("note created");
     return note;
 };
 
@@ -85,12 +85,12 @@ var deleteNote = function(index) {
     notes[index] = '';
     localStorage.setItem(url, JSON.stringify(notes));
 	
-	console.log("note deleted");
+	//console.log("note deleted");
 };
 
 //logic to set key
  var getToggleKey = function(e){
-		 console.log(e);
+		 //console.log(e);
 	 if(e.which === 16 || e.which === 17 || e.which === 18 || e.which === 91 || e.which === 92) {
 		 $('body').one('keydown', getToggleKey);
 		 return false;
@@ -107,7 +107,9 @@ var deleteNote = function(index) {
 
 	 //need alternative method to this, '.' shows up as '3/4' symbol
 	 text += getCharDesc(e.which).toLowerCase();
-	 localStorage.setItem('toggleKey', text);
+	 saveSetting(text);
+	 //localStorage.setItem('toggleKey', text);
+	 $('#toggle-key').data('click-count', false);
 	 $('#toggle-key').text(text);
 	 loadCurrentSetting();
 	 return false;
@@ -115,8 +117,9 @@ var deleteNote = function(index) {
 
 //loads default settings on first execution
 var loadDefaultSetting = function(){
-	console.log("load default settings");
-	localStorage.setItem('toggleKey', '');
+	//console.log("load default settings");
+	saveSetting('');
+	//localStorage.setItem('toggleKey', '');
 	$('#toggle-key').text('');
 	
 	//not working
@@ -125,21 +128,23 @@ var loadDefaultSetting = function(){
 
 //loads at start of every execution except for first
 var loadCurrentSetting = function(){
-	console.log("load current settings");
-	var key = localStorage.getItem('toggleKey');
-	if(!key) {
-		loadDefaultSetting();
-	}
-	key = localStorage.getItem('toggleKey');
-	if(key === '') {
-		return;
-	}
-	$('#toggle-key').text(key);
-	$(document).unbind('keydown');
-	$(document).bind('keydown', key, displayOverlay);
+	//console.log("load current settings");
+	loadSetting(function(key) {
+		//var key = localStorage.getItem('toggleKey');
+		if(!key) {
+			loadDefaultSetting();
+		}
+		//key = localStorage.getItem('toggleKey');
+		if(key === '') {
+			return;
+		}
+		$('#toggle-key').text(key);
+		$(document).unbind('keydown');
+		$(document).bind('keydown', key, displayOverlay);
+	});
 };
 
-function getCharDesc(char_code)
+var getCharDesc = function(char_code)
 {
 	var specialKeys = {
 		8: "backspace", 9: "tab", 13: "return", 16: "shift", 17: "ctrl", 18: "alt", 19: "pause",
@@ -151,8 +156,16 @@ function getCharDesc(char_code)
 		120: "f9", 121: "f10", 122: "f11", 123: "f12", 144: "numlock", 145: "scroll", 188: ",", 190: ".",
 		191: "/", 224: "meta"
 	};
-	console.log(char_code);
+	//console.log(char_code);
 	return specialKeys[char_code] ? specialKeys[char_code] : String.fromCharCode(char_code);
+}
+
+var saveSetting = function(toggleKey) {
+	chrome.extension.sendRequest({cmd: "save", data: {'toggleKey': toggleKey }});
+} 
+
+var loadSetting = function(func) {
+	chrome.extension.sendRequest({cmd: "load"}, func);
 }
 
 //Execute on every page load.
@@ -193,7 +206,7 @@ var init = function() {
 
 	//If clicked, insert a new note at the page that was clicked.
 	overlayObject.on('click', function (e) {
-		console.log(url);
+		//console.log(url);
 		var ajax_url = document.URL;     //Page URL #Necessary cos Ajax
 
 		if(ajax_url.indexOf('#') !== -1 && (ajax_url.indexOf('www.google.com/search') !== -1 || ajax_url.indexOf('www.google.com/webhp' !== -1))) {
@@ -250,19 +263,19 @@ var init = function() {
 
 	//Delete notes when delete is clicked.
 	$('.delete').on('click', function() {
-		console.log("delete box clicked");
+		//console.log("delete box clicked");
 		deleteNote($(this).attr('id').replace('delete-', ''));
 	});
 
 	$('#wrench').on('click',function(e){
-		console.log("wrench clicked");
+		//console.log("wrench clicked");
 		$('#reset').slideToggle('fast');
 		$('#toggle-key-label').slideToggle('fast');
 		return false;
 	});
 	
 	$('#reset').on('click', function(){
-		console.log("resetting...");
+		//console.log("resetting...");
 		loadDefaultSetting();
 		
 		return false;
@@ -273,12 +286,16 @@ var init = function() {
 	$('#toggle-key-label').on('click', function(e){
 		if($('#toggle-key').data('click-count') === true) {
 			$('#toggle-key').data('click-count', false);
-			$('#toggle-key').text(localStorage.getItem('toggleKey'));
+			loadSetting(function(key) {
+				console.log(key);
+				$('#toggle-key').text(key);
+			});	
 			$('body').off('keydown', getToggleKey);
 		} else {
-			console.log("toggle clicked, waiting for user to hit key");
-			$('#toggle-key').text('new hotkey...');
+			//console.log("toggle clicked, waiting for user to hit key");
+			$('#toggle-key').data($('#toggle-key').text());
 			$('#toggle-key').data('click-count', true);
+			$('#toggle-key').text('new hotkey...');
 			$('body').one('keydown', getToggleKey);
 		}
 		return false;
