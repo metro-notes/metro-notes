@@ -11,4 +11,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	if(request.cmd == "load") {
 		sendResponse(localStorage.getItem('toggleKey'));
 	}
+
+	if(request.cmd == "badge") {
+		chrome.browserAction.setBadgeText({'text': '' + request.data.count, 'tabId': sender.tab.id});
+	}
 });
+

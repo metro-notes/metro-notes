@@ -200,6 +200,7 @@ var init = function() {
 				}
 			}
 			notes = note_arr;
+			chrome.extension.sendRequest({cmd: "badge", data: {'count': notes.length }});
 			localStorage.setItem(url, JSON.stringify(notes));
 		}
 	}
