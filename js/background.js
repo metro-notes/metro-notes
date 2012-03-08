@@ -13,7 +13,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	}
 
 	if(request.cmd == "badge") {
-		chrome.browserAction.setBadgeText({'text': '' + request.data.count, 'tabId': sender.tab.id});
+		if(request.data.count > 0){
+			chrome.browserAction.setBadgeText({'text': '' + request.data.count, 'tabId': sender.tab.id});
+		}
 	}
 });
 

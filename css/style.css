@@ -76,24 +76,16 @@
 }
 .metro-notes-note > p {
     margin: 10px;
+	margin-top: 24px;
     color: rgb(44, 44, 44);
 }
 .handle {
-    width: 100%;
-    height: 14px;
-    background-color: rgb(196, 191, 175);
-    cursor: move;
-}
-.delete {
-	width: 10px;
-	height: 10px;
 	position: absolute;
 	top: 2px;
 	right: 2px;
-	background-color: rgba(168, 42, 50, 0.6);
-	cursor: pointer;
+	width: 25px;
+    cursor: move;
 }
-
 #instant_issue {
 	position: fixed;
 	font-size: 26px;
