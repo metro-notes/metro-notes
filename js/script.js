@@ -19,10 +19,12 @@ var displayOverlay = function() {
 //Inserts a new note based on the given noteObj and index.
 //Only adds the note to the DOM (does not affect localStorage).
 var insertNote = function(noteObj, index) {
-    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><div id="handle-' + index + '"></div><p></p></div>');
+    var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><div id="delete-' + index + '" class="delete options"></div><div id="handle-' + index + '"></div><p></p></div>');
     //Append the note contents into the inner <p> tag of the new <div>
     note.children('p').append(noteObj.note);
-	note.children('#handle-' + index).append('<img src="' + chrome.extension.getURL('icons/pushpin.png') + '" class="handle" />');
+	note.children('#handle-' + index).append('<img src="' + chrome.extension.getURL('icons/pin.png') + '" class="handle" />');
+	note.children('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" class="trash" />');
+	note.children('#delete-' + index).hide();
     //Update location and size based on noteObj
     note.css({
         'top': noteObj.top,
@@ -57,8 +59,7 @@ var insertNote = function(noteObj, index) {
 	
 	//Delete notes when delte is clicked.
 	note.on('click', '.delete', function() {
-		//console.log('delete');
-		deleteNote($(this).attr('id').replace('delete-', ''));
+		deleteNote($(this).prop('id').replace('delete-', ''));
 	});
 
     overlayObject.append(note);
@@ -263,16 +264,11 @@ var init = function() {
 		return false;
 	});
 
-	//Delete notes when delete is clicked.
-	$('.delete').on('click', function() {
-		//console.log("delete box clicked");
-		deleteNote($(this).attr('id').replace('delete-', ''));
-	});
-
 	$('#wrench').on('click',function(e){
 		//console.log("wrench clicked");
 		$('#reset').slideToggle('fast');
 		$('#toggle-key-label').slideToggle('fast');
+		$('.options').slideToggle('fast');
 		return false;
 	});
 	
