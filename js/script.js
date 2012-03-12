@@ -22,8 +22,8 @@ var insertNote = function(noteObj, index) {
     var note = $('<div class="metro-notes-note" id="metro-notes-note-' + index + '"><div id="delete-' + index + '" class="delete options"></div><div id="handle-' + index + '"></div><p></p></div>');
     //Append the note contents into the inner <p> tag of the new <div>
     note.children('p').append(noteObj.note);
-	note.children('#handle-' + index).append('<img src="' + chrome.extension.getURL('icons/pin.png') + '" class="handle" />');
-	note.children('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" class="trash" />');
+	note.children('#handle-' + index).append('<img src="' + chrome.extension.getURL('icons/pin.png') + '" class="handle" title="Move this note." />');
+	note.children('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" class="trash" title="Delete this note." />');
 	note.children('#delete-' + index).hide();
     //Update location and size based on noteObj
     note.css({
