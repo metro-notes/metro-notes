@@ -222,7 +222,7 @@ var init = function() {
 			insertMode = false;
 			return false;
 		}
-		noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '150px', 'height': '125px'};
+		noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
 		insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
 		insertMode = true;
 		return false;
