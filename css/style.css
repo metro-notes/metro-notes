@@ -32,7 +32,7 @@
 
 .wrench, .options, #instant_issue {
 	font-size: 32px;
-	font-family: "Raleway", sans-serif;
+	font-family: Helvetica, 'Segoe UI', Arial, sans-serif;
 	-webkit-font-smoothing: subpixel-antialiased, antialiased;
 	
 	cursor: pointer;
@@ -57,17 +57,17 @@
 	left: 15px;
 }
 
-.metro-notes-note{
+.metro-notes-note {
     position: absolute;
     min-width: 10px;
     min-height: 10px;
     font-size: 14px;
     border: 2px solid;
-    border-color: rgb(238, 232, 213);
     overflow: auto;
     word-wrap: break-word;
     resize: both;
     background: rgb(256, 246, 227);
+    border-color: rgb(238, 232, 213);
     color: rgb(44, 44, 44);
     font-family: 'Helvetica', 'Segoe UI', 'Arial', sans-serif;
 }
@@ -83,14 +83,15 @@
 	position: absolute;
 	top: 2px;
 	right: 2px;
-	width: 20px;
+	width: 18px;
     cursor: move;
 }
 .trash {
 	position: absolute;
-	top: 2px;
-	left: 2px;
-	width: 20px;
+	top: 5px;
+	left: 5px;
+	width: 12px;
+    height: 12px;
     cursor: pointer;
 }
 #instant_issue {

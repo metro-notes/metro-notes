@@ -33,7 +33,7 @@
         }
     ],
 	"web_accessible_resources": [
-		"icons/pin.png",
-		"icons/trash.png"
+		"icons/move.png",
+		"icons/delete.png"
 	]
 }
