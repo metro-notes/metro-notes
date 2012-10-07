@@ -30,7 +30,7 @@
 
 }
 
-.wrench, #instant_issue{
+.wrench, .options, #instant_issue {
 	font-size: 32px;
 	font-family: "Raleway", sans-serif;
 	-webkit-font-smoothing: subpixel-antialiased, antialiased;
@@ -40,7 +40,7 @@
 	z-index: 9999;
 }
 
-#toggle-key-label, #toggle-key{
+.toggle-key-label, #toggle-key{
 	font-size: 24px;
 	bottom: 60px;
 	margin-left: 15px;
