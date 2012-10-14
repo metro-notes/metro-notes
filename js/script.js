@@ -27,7 +27,7 @@ var insertNote = function(noteObj, index) {
     overlayObject.append(note);
 
     //Append the note contents into the inner <p> tag of the new <div>
-    note.children('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" title="Delete this note." />');
+    note.find('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" title="Delete this note." />');
     note.find('.note-text').css('height', parseInt(noteObj.height, 10) - 21);
     note.find('p').append(noteObj.note);
 
@@ -187,14 +187,14 @@ var init = function() {
             return false;
         }
         noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
-        insertNote(noteObj, notes.length).children('p').prop('contentEditable', true).focus();
+        insertNote(noteObj, notes.length).find('p').prop('contentEditable', true).focus();
         insertMode = true;
         return false;
     });
 
-    //Clicking on the note should make its children editable(especially now we have the drag handlers)
+    //Clicking on the note should make it editable(especially now we have the drag handlers)
     overlayObject.on('click', '.metro-notes-note', function() {
-        $(this).children('p').prop('contentEditable', 'true').focus();
+        $(this).find('p').prop('contentEditable', 'true').focus();
         insertMode = true;
         return false;
     });
@@ -206,15 +206,15 @@ var init = function() {
     });
 
     //When the note loses focus, and it has data, save it.
-    overlayObject.on('blur', '.metro-notes-note > p', function() {
+    overlayObject.on('blur', '.metro-notes-note > .note-text > p', function() {
         var note = $(this).text();
         //If the note is empty, delete it.
         if($.trim(note) === '') {
             try {
-                deleteNote($(this).parent('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
+                deleteNote($(this).parents('.metro-notes-note').attr('id').replace('metro-notes-note-', ''));
             } catch(e) { console.log(e); }
         } else {
-            var tar = $(this).parent('.metro-notes-note');
+            var tar = $(this).parents('.metro-notes-note');
             noteObj = {
                 'note': tar.text(),
                 'top': tar.css('top'),
