@@ -146,7 +146,6 @@ var reloadNotes = function() {
 
 var saveNotes = function(url, notes) {
     chrome.extension.sendMessage({cmd: 'saveNotes', data: {url: url, notes: notes }});
-    console.log($('.metro-notes-note').size());
     chrome.extension.sendMessage({cmd: 'badge', data: {count: $('.metro-notes-note').size() }});
 };
 
