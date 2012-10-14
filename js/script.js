@@ -28,7 +28,7 @@ var insertNote = function(noteObj, index) {
 
     //Append the note contents into the inner <p> tag of the new <div>
     note.children('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" title="Delete this note." />');
-    note.find('.note-text').css('height', parseInt(noteObj.height, 10) - 23);
+    note.find('.note-text').css('height', parseInt(noteObj.height, 10) - 21);
     note.find('p').append(noteObj.note);
 
     //Update location and size based on noteObj
