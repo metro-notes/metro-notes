@@ -1,60 +1,49 @@
-#metro-notes-overlay{
-    background: rgba(255, 255, 255, 0.7); 
-    position: fixed; 
-    top: 0px; 
-    left: 0px;
+.metro-notes-overlay {
+    font-family: Helvetica, 'Segoe UI', Arial, sans-serif;
+    font-size: 32px;
+    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%; 
+    height: 100%;
     z-index: 9998;
-	/*z-index is hard coded but should be dynamically changed later*/
-    color: rgb(44, 44, 44);
+    color: #444444;
 }
 
-#wrench-overlay{
-    background: rgba(0, 0, 0, 0.4); 
-    position: fixed; 
-    top: 0px; 
-    left: 0px;
-    width: 100%;
-    height: 100%; 
-    z-index: 9999;
-    color: rgb(44, 44, 44);
-}
-
-/*font died again*/
-@font-face {
-	font-family: 'Raleway';
-	font-style: normal;
-	font-weight: 100;
-	src: local('Raleway'), url('http://themes.googleusercontent.com/static/fonts/raleway/v5/RJMlAoFXXQEzZoMSUteGWLO3LdcAZYWl9Si6vvxL-qU.woff');
-
-}
-
-.wrench, .options, #instant_issue {
-	font-size: 32px;
-	font-family: Helvetica, 'Segoe UI', Arial, sans-serif;
-	-webkit-font-smoothing: subpixel-antialiased, antialiased;
-	
-	cursor: pointer;
+.wrench, .options, .instant_issue {
     position: absolute;
 	z-index: 9999;
 }
 
-.toggle-key-label, #toggle-key{
-	font-size: 24px;
-	bottom: 60px;
-	margin-left: 15px;
-}
-
-#wrench {
+.wrench {
+    position: absolute;
     bottom: 15px;
     left: 15px;
 }
 
-#reset{
-	font-size: 24px;
+.options {
+    bottom: 50px;
+    left: 15px;
+    font-size: 24px;
+}
+
+.wrench, .options > div {
+    cursor: pointer;
+}
+
+.toggle-key {
+    margin-left: 15px;
+    margin-bottom: 8px;
+}
+
+.reset {
+    position: absolute;
 	bottom: 90px;
 	left: 15px;
+    font-size: 24px;
+    margin-bottom: 5px;
 }
 
 .metro-notes-note {
@@ -62,39 +51,55 @@
     min-width: 10px;
     min-height: 10px;
     font-size: 14px;
-    border: 2px solid;
-    overflow: auto;
     word-wrap: break-word;
     resize: both;
+    /*padding-bottom: 20px;*/
     background: rgb(256, 246, 227);
-    border-color: rgb(238, 232, 213);
     color: rgb(44, 44, 44);
-    font-family: 'Helvetica', 'Segoe UI', 'Arial', sans-serif;
+    border: 2px solid rgb(238, 232, 213);
+    /*margin-top: 20px;*/
 }
-.metro-notes-note > p:focus {
-    outline: none;
+
+.note-text {
+    width: inherit;
+    margin-top: 12px;
+    padding-top: 2px;
+    overflow: auto;
+    resize: none;
 }
-.metro-notes-note > p {
-    margin: 10px;
-	margin-top: 24px;
+.metro-notes-note > .note-text > p:focus {
+    outline: solid 1px #EEE8D5;
+}
+
+.metro-notes-note > .note-text > p {
+    margin-left: 10px;
+    margin-right: 10px;
     color: rgb(44, 44, 44);
+    padding-bottom: 16px;
 }
+
+.handle, .delete {
+    position: absolute;
+    z-index: auto;
+}
+
 .handle {
-	position: absolute;
-	top: 2px;
-	right: 2px;
-	width: 18px;
-    cursor: move;
-}
-.trash {
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 12px;
+	top: 0;
+	width: 100%;
     height: 12px;
-    cursor: pointer;
+    opacity: 0.7;
+    background-color: #EEE8D5;
 }
-#instant_issue {
+
+.delete {
+    position: absolute;
+	bottom: 4px;
+	left: 4px;
+    cursor: pointer;
+    background: rgb(256, 246, 227);
+}
+
+.instant_issue {
 	position: fixed;
 	font-size: 26px;
 	top: 30px;

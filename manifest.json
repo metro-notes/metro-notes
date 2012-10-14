@@ -20,7 +20,7 @@
 		"default_title": "Show notes"
 	},
     "permissions": [
-        "tabs", 
+        "tabs",
         "http://*/*", "https://*/*",
         "storage"
     ],
@@ -29,11 +29,12 @@
             "matches": ["http://*/*", "https://*/*"],
             "css": ["css/style.css"],
             "js": ["js/jquery.js", "js/jquery.event.drag-2.0.min.js", "js/mousetrap.js", "js/script.js"],
-            "run-at": "document_end" 
+            "run-at": "document_end"
         }
     ],
 	"web_accessible_resources": [
 		"icons/move.png",
-		"icons/delete.png"
+		"icons/trash.png",
+        "css/noise.png"
 	]
 }

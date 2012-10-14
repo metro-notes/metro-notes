@@ -4,9 +4,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 chrome.runtime.onInstalled.addListener(function() {
-	chrome.storage.sync.get('notes', function(res) {
+	chrome.storage.local.get('notes', function(res) {
 		if(!res.notes) {
-			chrome.storage.sync.set({ notes: {} });
+			chrome.storage.local.set({ notes: {} });
 		}
 	});
 });
@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener(function() {
 chrome.extension.onMessage.addListener(
 	function(message, sender, callback) {
 		if(message.cmd == 'saveSettings') {
-			chrome.storage.sync.set({ 
+			chrome.storage.sync.set({
 				settings: {
 					toggleKey: message.data.toggleKey
 				}
@@ -34,15 +34,15 @@ chrome.extension.onMessage.addListener(
 		}
 
 		if (message.cmd == 'loadNotes') {
-			chrome.storage.sync.get('notes', function(res) {
+			chrome.storage.local.get('notes', function(res) {
 				callback(res.notes[message.data.url]);
 			});
 		}
 
 		if (message.cmd == 'saveNotes') {
-			chrome.storage.sync.get('notes', function(res) {
+			chrome.storage.local.get('notes', function(res) {
 				res.notes[message.data.url] = message.data.notes;
-				chrome.storage.sync.set(res);
+				chrome.storage.local.set(res);
 			});
 		}
 		return true;
