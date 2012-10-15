@@ -227,12 +227,12 @@ var init = function() {
         return false;
     });
 
-    $('#wrench').on('click',function() {
+    $('.wrench').on('click',function() {
         $('#options').slideToggle('fast');
         return false;
     });
 
-    $('#reset').on('click', function() {
+    $('.reset').on('click', function() {
         saveSettings('');
         return false;
     });
