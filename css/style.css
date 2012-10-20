@@ -1,7 +1,7 @@
 .metro-notes-overlay {
     font-family: Helvetica, 'Segoe UI', Arial, sans-serif;
     font-size: 32px;
-    background-color: rgb(255, 255, 255);
+    background-color: #FFFFFF;
     background-color: rgba(255, 255, 255, 0.7);
     position: fixed;
     top: 0;
@@ -48,34 +48,32 @@
 
 .metro-notes-note {
     position: absolute;
-    min-width: 10px;
-    min-height: 10px;
     font-size: 14px;
     word-wrap: break-word;
-    resize: both;
-    /*padding-bottom: 20px;*/
-    background: rgb(256, 246, 227);
+    background: #FFF6E3;
     color: rgb(44, 44, 44);
-    border: 2px solid rgb(238, 232, 213);
-    /*margin-top: 20px;*/
+    border: 2px solid #EEE8D5;
 }
 
+
 .note-text {
-    width: inherit;
     margin-top: 12px;
     padding-top: 2px;
+    padding-bottom: 2px;
     overflow: auto;
-    resize: none;
-}
-.metro-notes-note > .note-text > p:focus {
-    outline: solid 1px #EEE8D5;
+    resize: both;
+    width: 150px;
+    height: 150px;
 }
 
 .metro-notes-note > .note-text > p {
-    margin-left: 10px;
+    margin-left: 5px;
     margin-right: 10px;
     color: rgb(44, 44, 44);
-    padding-bottom: 16px;
+}
+
+.metro-notes-note > .note-text > p:focus {
+    outline: none; /* I'm sorry! I'm looking for a better looking fix!  solid 1px #EEE8D5; */
 }
 
 .handle, .delete {
@@ -93,10 +91,13 @@
 
 .delete {
     position: absolute;
-	bottom: 4px;
-	left: 4px;
+	bottom: -30px;
+	left: -2px;
+    padding: 4px;
     cursor: pointer;
-    background: rgb(256, 246, 227);
+    background: #FFF6E3;
+    border: 2px solid #EEE8D5;
+    border-top: 2px solid #FFF6E3;
 }
 
 .instant_issue {

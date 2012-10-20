@@ -26,41 +26,42 @@ var insertNote = function(noteObj, index) {
         '</div>');
     overlayObject.append(note);
 
-    //Append the note contents into the inner <p> tag of the new <div>
-    note.find('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" title="Delete this note." />');
-    note.find('.note-text').css('height', parseInt(noteObj.height, 10) - 21);
-    note.find('p').append(noteObj.note);
-
     //Update location and size based on noteObj
     note.css({
         'top': noteObj.top,
-        'left': noteObj.left,
-        'width': noteObj.width,
-        'height': noteObj.height
+        'left': noteObj.left
     });
 
-    //Assign drag and dragend event handlers
-    note.drag(function(ev, dd) {
-        $(this).css({
-            top: dd.offsetY,
-            left: dd.offsetX
-        });
-        },
-        {
-            'handle': '.handle'
-        }
-    );
+    //Append the note contents into the inner <p> tag of the new <div>
+    note.find('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" title="Delete this note." />');
+    note.find('.note-text').css('height', parseInt(noteObj.height, 10));
+    note.find('.note-text').css('width', parseInt(noteObj.width, 10));
+    note.find('p').append(noteObj.note);
 
-    //Function called when an element is dropped after dragging.
-    //Updates the elements new x, y location in storage
-    note.on('dragend', function() {
+    //Assign drag and dragend event handlers
+    note.draggable({
+        'handle': '.handle',
+        stop: function(e, ui) {
+            var tar = $(this);
+            noteObj = {
+                'note': tar.text(),
+                'top': ui.position.top,
+                'left': ui.position.left,
+                'width': tar.css('width'),
+                'height': tar.css('height')
+            };
+            updateNote(noteObj, tar.attr('id').replace('metro-notes-note-', ''));
+        }
+    });
+
+    note.on('resize', function() {
         var tar = $(this);
         noteObj = {
             'note': tar.text(),
-        'top': tar.css('top'),
-        'left': tar.css('left'),
-        'width': tar.css('width'),
-        'height': tar.css('height')
+            'top': tar.css('top'),
+            'left': tar.css('left'),
+            'width': tar.css('width'),
+            'height': tar.css('height')
         };
         updateNote(noteObj, tar.attr('id').replace('metro-notes-note-', ''));
     });

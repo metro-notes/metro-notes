@@ -28,7 +28,7 @@
         {
             "matches": ["http://*/*", "https://*/*"],
             "css": ["css/style.css"],
-            "js": ["js/jquery.js", "js/jquery.event.drag-2.0.min.js", "js/mousetrap.js", "js/script.js"],
+            "js": ["js/jquery.js", "js/jquery-ui.min.js", "js/mousetrap.js", "js/script.js"],
             "run-at": "document_end"
         }
     ],
