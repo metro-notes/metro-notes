@@ -62,8 +62,8 @@
     padding-bottom: 2px;
     overflow: auto;
     resize: both;
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
 }
 
 .metro-notes-note > .note-text > p {

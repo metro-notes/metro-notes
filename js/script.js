@@ -34,8 +34,6 @@ var insertNote = function(noteObj, index) {
 
     //Append the note contents into the inner <p> tag of the new <div>
     note.find('#delete-' + index).append('<img src="' + chrome.extension.getURL('icons/trash.png') + '" title="Delete this note." />');
-    note.find('.note-text').css('height', parseInt(noteObj.height, 10));
-    note.find('.note-text').css('width', parseInt(noteObj.width, 10));
     note.find('p').append(noteObj.note);
 
     //Assign drag and dragend event handlers
@@ -46,9 +44,7 @@ var insertNote = function(noteObj, index) {
             noteObj = {
                 'note': tar.text(),
                 'top': ui.position.top,
-                'left': ui.position.left,
-                'width': tar.css('width'),
-                'height': tar.css('height')
+                'left': ui.position.left
             };
             updateNote(noteObj, tar.attr('id').replace('metro-notes-note-', ''));
         }
@@ -59,9 +55,7 @@ var insertNote = function(noteObj, index) {
         noteObj = {
             'note': tar.text(),
             'top': tar.css('top'),
-            'left': tar.css('left'),
-            'width': tar.css('width'),
-            'height': tar.css('height')
+            'left': tar.css('left')
         };
         updateNote(noteObj, tar.attr('id').replace('metro-notes-note-', ''));
     });
@@ -83,9 +77,7 @@ var updateNote = function(noteObj, index) {
     $('#metro-notes-' + index).text(noteObj.note);
     $('#metro-notes-note-' + index).css({
         'top': noteObj.top,
-        'left': noteObj.left,
-        'width': noteObj.width,
-        'height': noteObj.height
+        'left': noteObj.left
     });
     notes[index] = noteObj;
     saveNotes(url, notes);
@@ -186,7 +178,7 @@ var init = function() {
             insertMode = false;
             return false;
         }
-        noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX, 'width': '200px', 'height': '200px'};
+        noteObj = {'note': '', 'top': e.offsetY, 'left': e.offsetX};
         insertNote(noteObj, notes.length).find('p').prop('contentEditable', true).focus();
         insertMode = true;
         return false;
@@ -218,9 +210,7 @@ var init = function() {
             noteObj = {
                 'note': tar.text(),
                 'top': tar.css('top'),
-                'left': tar.css('left'),
-                'width': tar.css('width'),
-                'height': tar.css('height')
+                'left': tar.css('left')
             };
             updateNote(noteObj, tar.attr('id').replace('metro-notes-note-', ''));
             $(this).prop('contentEditable', 'false');
