@@ -97,10 +97,10 @@ var loadSettings = function() {
     chrome.extension.sendMessage({cmd: 'loadSettings'}, function(settings) {
         if (settings) {
             if(!settings.toggleKey || settings.toggleKey === '') {
-                $('#toggle-key').text('');
+                $('.toggle-key').text('');
                 Mousetrap.reset();
             } else {
-                $('#toggle-key').text(settings.toggleKey);
+                $('.toggle-key').text(settings.toggleKey);
                 Mousetrap.reset();
                 Mousetrap.bind(settings.toggleKey, displayOverlay);
             }
@@ -155,7 +155,7 @@ var init = function() {
     overlayObject.append(
         '<div class="options">' +
             '<div class="reset">reset</div>' +
-            '<div class="toggle-key-label" id="toggle-key-label">toggle key<span class="toggle-key"></span></div>' +
+            '<div class="toggle-key-label">set toggle key<span class="toggle-key"></span></div>' +
         '</div>'
     );
 
@@ -219,7 +219,7 @@ var init = function() {
     });
 
     $('.wrench').on('click',function() {
-        $('#options').slideToggle('fast');
+        $('.options').slideToggle('fast');
         return false;
     });
 
@@ -230,14 +230,14 @@ var init = function() {
 
     //on click, user is prompted to set toggle key
     //If the user clicks again, nothing is changed
-    $('#toggle-key-label').on('click', function(e) {
-        if($('#toggle-key').data('click-count') === true) {
-            $('#toggle-key').data('click-count', false);
+    $('.toggle-key-label').on('click', function(e) {
+        if($('.toggle-key').data('click-count') === true) {
+            $('.toggle-key').data('click-count', false);
             loadSettings();
         } else {
-            $('#toggle-key').data($('#toggle-key').text());
-            $('#toggle-key').data('click-count', true);
-            $('#toggle-key').text('new hotkey...');
+            $('.toggle-key').data($('.toggle-key').text());
+            $('.toggle-key').data('click-count', true);
+            $('.toggle-key').text('new hotkey...');
             $('body').one('keydown', getToggleKey);
         }
         return false;
@@ -262,7 +262,7 @@ var getToggleKey = function(e){
 
     //need alternative method to this, '.' shows up as '3/4' symbol
     text += getCharDesc(e.which).toLowerCase();
-    $('#toggle-key').data('click-count', false);
+    $('.toggle-key').data('click-count', false);
     saveSettings(text);
     return false;
 };

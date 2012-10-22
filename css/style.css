@@ -39,9 +39,6 @@
 }
 
 .reset {
-    position: absolute;
-	bottom: 90px;
-	left: 15px;
     font-size: 24px;
     margin-bottom: 5px;
 }
@@ -60,6 +57,7 @@
     margin-top: 12px;
     padding-top: 2px;
     padding-bottom: 2px;
+    padding-right: 4px;
     overflow: auto;
     resize: both;
     width: 250px;
