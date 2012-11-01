@@ -28,9 +28,10 @@ chrome.extension.onMessage.addListener(
 		}
 
 		if(message.cmd == 'badge') {
-			if(message.data.count > 0){
+			// won't decrement past 0...I hope
+			//if(message.data.count > 0){
 				chrome.browserAction.setBadgeText({'text': '' + message.data.count, 'tabId': sender.tab.id});
-			}
+			//}
 		}
 
 		if (message.cmd == 'loadNotes') {
