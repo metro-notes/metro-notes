@@ -28,7 +28,9 @@ chrome.extension.onMessage.addListener(
 		}
 
 		if(message.cmd == 'badge') {
-			if(message.data.count > 0){
+            if(message.data.count == 0)
+                chrome.browserAction.setBadgeText({'text': '', 'tabId': sender.tab.id});
+			else if(message.data.count > 0){
 				chrome.browserAction.setBadgeText({'text': '' + message.data.count, 'tabId': sender.tab.id});
 			}
 		}
