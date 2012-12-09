@@ -20,7 +20,7 @@ var displayOverlay = function() {
 var insertNote = function(noteObj, index) {
     var note = $(
         '<div class="metro-notes-note" id="metro-notes-note-' + index + '">' +
-            '<div id="delete-' + index + '" class="delete"></div>' +
+            '<div id="delete-' + index + '" class="delete"><div class="delete-fix">&nbsp;</div></div>' +
             '<div id="handle-' + index + '" class="handle"></div>' +
             '<div class="note-text"><p></p></div>' +
         '</div>');
@@ -151,7 +151,7 @@ var init = function() {
 
     // overlayObject.css('backgroundImage', chrome.extension.getURL('css/noise.png'));
     overlayObject.append('<div class="instant_issue">Sorry...Metro Notes does not work well with Google Instant. We are investigating a fix...</div>');
-    overlayObject.append('<div class="wrench">wrench</div>');
+    overlayObject.append('<div class="mn-wrench">wrench</div>');
     overlayObject.append(
         '<div class="options">' +
             '<div class="reset">reset</div>' +
@@ -218,7 +218,8 @@ var init = function() {
         return false;
     });
 
-    $('.wrench').on('click',function() {
+    $('.mn-wrench').on('click',function() {
+		console.log('clicked');
         $('.options').slideToggle('fast');
         return false;
     });
